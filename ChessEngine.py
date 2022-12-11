@@ -57,7 +57,7 @@ class GameState():
             self.blackKingLocation = (move.endRow, move.endCol)
 
         # Pawn Promotion
-        if self.isPawnPromote:
+        if move.isPawnPromotion:
             # Khi getValidMove() duoc thuc thi se lay toan bo nuoc di cua quan trang roi bo vao list
             # Vo tinh getValidMove() cung thuc hien nuoc di phong tuoc cho con tot nen doan code nay chay
             # khien cho chuong trinh bi loi vi luc nay nguoi choi chua thuc hien nuoc di.
