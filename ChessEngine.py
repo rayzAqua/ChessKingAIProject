@@ -30,8 +30,6 @@ class GameState():
         self.blackKingLocation = (0, 4)
         self.checkMate = False
         self.staleMate = False
-        # Pawn Promotion
-        self.isPawnPromote = False
         # en passant
         self.enpassantPossible = ()
         # Danh sach Log luon duoc khoi tao boi gia tri goc vi khi undo se day het toan bo gia tri da tao ra truoc do trong list.
@@ -45,7 +43,7 @@ class GameState():
                                                self.currentCastlingRights.bks, self.currentCastlingRights.bqs)]
 
     # Thuc hien mot nuoc di dua tren thong tin cua class Move
-    def makeMove(self, move, isQueen=False, isBishop=False, isKnight=False, isRook=False):
+    def makeMove(self, move):
         # Normal Move
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.board[move.startRow][move.startCol] = "--"
@@ -59,28 +57,12 @@ class GameState():
             self.blackKingLocation = (move.endRow, move.endCol)
 
         # Pawn Promotion
-        self.isPawnPromote = move.isPawnPromotion
         if self.isPawnPromote:
             # Khi getValidMove() duoc thuc thi se lay toan bo nuoc di cua quan trang roi bo vao list
             # Vo tinh getValidMove() cung thuc hien nuoc di phong tuoc cho con tot nen doan code nay chay
             # khien cho chuong trinh bi loi vi luc nay nguoi choi chua thuc hien nuoc di.
-            # Giai phap:
-            # - them vao 4 gia tri boolean dai dien cho 4 quan co the phong tuoc tai ham makeMove
-            # - Them vao thuoc tinh self.isPawnPromote trong Class GameState
-            # - Khi valid Move tien hanh lay danh sach nuoc di hop le thi no se thuc hien moi nuoc di co the bang ham makeMove
-            # dieu nay dan toi khi quan tot o vi tri gan cuoi' thi truoc khi nguoi choi thuc hien nuoc di thi getValidMove se thuc hien truoc
-            # no thuc hien ham makeMove de lay nuoc di hop le va luc nay no goi den Class Move(), neu thoa man dieu kien thi Class Move
-            # se dat isPawnPromote = True va tai ham MakeMove self,isPawnPromote cung se la True
-            # Sau do tai ham Main luc nguoi choi click chuot thi kiem tra xem nuoc di do co isPawnPromote = True ko
-            # Neu co thi cho ng choi lua chon tuoc vi va dat 4 bien boolean thanh true, false tuy ky tu duoc nhap
-            if isQueen:
-                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "Q"
-            elif isBishop:
-                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "B"
-            elif isKnight:
-                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "N"
-            elif isRook:
-                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "R"
+            # Giai phap: AI se luon phong tot lam quan hau.
+            self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "Q"
 
         # En passsant
         # Neu con tot di 2 nuoc thi luot tiep theo co the thuc hien en passant - luu vi tri duoc phep di vao list enpassant

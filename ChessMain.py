@@ -69,22 +69,13 @@ class Main():
                                     # cua nuoc di enpassant, castling.
                                     # Neu la nuoc di cua nguoi choi tao ra thi se luon luon la isEnpassant = False
                                     # Neu la nuoc di trong validMoves thi neu la en passant thi thi en passant luon luon la True
-                                    if self.gs.isPawnPromote:
-                                        pieceName = input('Phong tuoc thanh gi: R, N, B or Q: ')
-                                        if pieceName == "Q":
-                                            self.gs.makeMove(validMoves[i], isQueen=True)
-                                        elif pieceName == "B":
-                                            self.gs.makeMove(validMoves[i], isBishop=True)
-                                        elif pieceName == "N":
-                                            self.gs.makeMove(validMoves[i], isKnight=True)
-                                        elif pieceName == "R":
-                                            self.gs.makeMove(validMoves[i], isRook=True)
-                                    else:
-                                        self.gs.makeMove(validMoves[i])
+                                    self.gs.makeMove(validMoves[i])
                                     moveMake = True
                                     sqSelected = ()  # Reset
                                     playerClick = []  # Reset
                             if not moveMake:
+                                # Bat loi khi nguoi choi da chon 1 con co va sau do con 1 con co khac
+                                # khi ng choi lam hanh dong nay thi toa do con list playerClick se la lam chon cuoi cung
                                 playerClick = [sqSelected]
 
                 elif e.type == pg.KEYDOWN:
