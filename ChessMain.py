@@ -120,5 +120,5 @@ class Main():
 '''
 Chay chuong trinh
 '''
-# main = Main()
+# main = Main(True, True)
 # main.mainloop()
