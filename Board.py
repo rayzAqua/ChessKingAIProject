@@ -126,6 +126,10 @@ def drawAvatar(screen, image):
     for button in [AVATAR]:
         button.update(screen)
 
+# def showInformationPlayer():
+#     name_text = FormMainMenu.get_font(30).render('FULLNAME Test', True, "#b68f40")
+#     name_rect = name_text.get_rect(850, 100)
+#     screen.blit(name_text, name_rect)
 
 def drawMoveLog(screen, gs, font):
     moveLogRect = pg.Rect(WIDTH, HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, MOVE_LOG_PANEL_HEIGHT)

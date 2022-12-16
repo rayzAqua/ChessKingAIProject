@@ -25,6 +25,7 @@ def main(playerOne, playerTwo):
     gs = ChessEngine.GameState()  # Trang thai ban co
     clock = pg.time.Clock()
     Board.loadImage()
+    Board.showInformationPlayer()
 
     moveLogFont = pg.font.SysFont("Arial", 12, False, False)
     # Lay nuoc di hop le - lay mot lan truoc khi vao vong lap

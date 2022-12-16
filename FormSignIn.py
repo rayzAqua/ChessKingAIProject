@@ -2,7 +2,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 import tkinter.messagebox as messagebox
 import pymssql as MSSQLCnn
-
+import FormGamePlay as ChessMain
 
 def ClickToLogin():
     if usernameEntry.get().strip() == "" or passwordEntry.get().strip() == "":
@@ -10,7 +10,7 @@ def ClickToLogin():
     else:
         #MSSQL Server ConnectingString
         try:
-            MSSQLdb = MSSQLCnn.connect("192.168.1.9", "sa", "123", "ChessAIProject")
+            MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
             mySQLCursor = MSSQLdb.cursor()
         except:
             messagebox.showerror('Error', 'Database Connectivity Issue, Please Try Again')
@@ -21,6 +21,8 @@ def ClickToLogin():
             messagebox.showerror("Error", "Invalid Username or Password")
         else:
             messagebox.showinfo("Success", "Successfully Login")
+            root.destroy()
+            ChessMain.main(True, False)
         MSSQLdb.close()
         mySQLCursor.close()
 

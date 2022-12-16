@@ -11,7 +11,7 @@ CHECKMATE = 1000
 # Chieu bi la khi di duong nao` cung bi doi thu de doa, cho nen chieu bi se = 0, = 0 tot hon la thuc hien nuoc di
 # voi rui ro la bi an mat nuoc do
 STALEMATE = 0
-DEPTH = 3
+DEPTH = 2
 # Tao ra mot so nguyen i ngau nhien va truyen no vao list validMoves, sau do tra ve validMove[i]
 def findRandomMoves(validMoves):
     return validMoves[random.randint(0, len(validMoves) - 1)]
