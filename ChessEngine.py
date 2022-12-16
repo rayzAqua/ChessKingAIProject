@@ -5,6 +5,7 @@ xac dinh cac nuoc di hop le cua ban co hien tai. No cung vo vai tro giu lai mot 
 
 from Move import Move
 
+
 class GameState():
     def __init__(self):
         # Ban co 8x8 la mot list 2 chieu, tung phan tu cua list co 2 ky tu
@@ -43,14 +44,14 @@ class GameState():
                                                self.currentCastlingRights.bks, self.currentCastlingRights.bqs)]
 
     # Thuc hien mot nuoc di dua tren thong tin cua class Move
-    def makeMove(self, move):
+    def makeMove(self, move, isHuman=False, pieceName=""):
         # Normal Move
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.board[move.startRow][move.startCol] = "--"
         self.moveLog.append(move)
         self.whiteToMove = not self.whiteToMove  # Doi luot tu quan trang thang quan den
 
-       # Neu quan vua di chuyen thi cap nhat lai vi tri
+        # Neu quan vua di chuyen thi cap nhat lai vi tri
         if move.pieceMoved == "wK":
             self.whiteKingLocation = (move.endRow, move.endCol)
         elif move.pieceMoved == "bK":
@@ -62,7 +63,17 @@ class GameState():
             # Vo tinh getValidMove() cung thuc hien nuoc di phong tuoc cho con tot nen doan code nay chay
             # khien cho chuong trinh bi loi vi luc nay nguoi choi chua thuc hien nuoc di.
             # Giai phap: AI se luon phong tot lam quan hau.
-            self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "Q"
+            if isHuman:
+                if pieceName == "Q":
+                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
+                elif pieceName == "B":
+                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
+                elif pieceName == "R":
+                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
+                elif pieceName == "N":
+                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
+            else:
+                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "Q"
 
         # En passsant
         # Neu con tot di 2 nuoc thi luot tiep theo co the thuc hien en passant - luu vi tri duoc phep di vao list enpassant
@@ -83,11 +94,13 @@ class GameState():
 
         # Castling
         if move.isCastleMove:
-            if move.endCol - move.startCol == 2: # Nhap thanh canh vua
-                self.board[move.endRow][move.endCol - 1] = self.board[move.endRow][move.endCol + 1] #Copy con xe vao o ben trai vua
-                self.board[move.endRow][move.endCol + 1] = "--" # Xoa con xe cu~
-            else: # Nhap thanh canh hau
-                self.board[move.endRow][move.endCol + 1] = self.board[move.endRow][move.endCol - 2]  # Copy con xe vao o ben phai vua
+            if move.endCol - move.startCol == 2:  # Nhap thanh canh vua
+                self.board[move.endRow][move.endCol - 1] = self.board[move.endRow][
+                    move.endCol + 1]  # Copy con xe vao o ben trai vua
+                self.board[move.endRow][move.endCol + 1] = "--"  # Xoa con xe cu~
+            else:  # Nhap thanh canh hau
+                self.board[move.endRow][move.endCol + 1] = self.board[move.endRow][
+                    move.endCol - 2]  # Copy con xe vao o ben phai vua
                 self.board[move.endRow][move.endCol - 2] = "--"  # Xoa con xe cu~
 
         # luu lai quyen nhap thanh - chi ap dung doi voi con vua va con xe
@@ -117,16 +130,23 @@ class GameState():
             self.enpassantPossible = self.enpassantPossibleLog[-1]
 
             # undo sau khi thuc hien castling
-            self.castleRightsLog.pop() # Loai bo gia tri cuoi trong ds Log nhap thanh
-            castleRights = self.castleRightsLog[-1] # Cap nhat lai gia tri currentCastlingRights = gia tri cuoi cua Log castle
-            self.currentCastlingRights = CastlingRights(castleRights.wks, castleRights.wqs, castleRights.bks, castleRights.bqs)
+            self.castleRightsLog.pop()  # Loai bo gia tri cuoi trong ds Log nhap thanh
+            castleRights = self.castleRightsLog[
+                -1]  # Cap nhat lai gia tri currentCastlingRights = gia tri cuoi cua Log castle
+            self.currentCastlingRights = CastlingRights(castleRights.wks, castleRights.wqs, castleRights.bks,
+                                                        castleRights.bqs)
             if move.isCastleMove:
                 if move.endCol - move.startCol == 2:  # Nhap thanh canh vua
-                    self.board[move.endRow][move.endCol + 1] = self.board[move.endRow][move.endCol - 1]  # Copy con xe vao o ben trai vua
+                    self.board[move.endRow][move.endCol + 1] = self.board[move.endRow][
+                        move.endCol - 1]  # Copy con xe vao o ben trai vua
                     self.board[move.endRow][move.endCol - 1] = "--"  # Xoa con xe cu~
                 else:  # Nhap thanh canh hau
-                    self.board[move.endRow][move.endCol - 2] = self.board[move.endRow][move.endCol + 1]  # Copy con xe vao o ben phai vua
+                    self.board[move.endRow][move.endCol - 2] = self.board[move.endRow][
+                        move.endCol + 1]  # Copy con xe vao o ben phai vua
                     self.board[move.endRow][move.endCol + 1] = "--"  # Xoa con xe cu~
+
+        self.checkMate = False
+        self.staleMate = False
 
     # Cap nhat gia tri cac thuoc tinh cua class CastlingRights
     def updateCastleRights(self, move):
@@ -139,16 +159,16 @@ class GameState():
             self.currentCastlingRights.bqs = False
         # Quan xe di chuyen
         elif move.pieceMoved == "wR":
-            if move.startRow == 7: # Quan trang
-                if move.startCol == 0: # Quan xe ben trai
+            if move.startRow == 7:  # Quan trang
+                if move.startCol == 0:  # Quan xe ben trai
                     self.currentCastlingRights.wqs = False
-                elif move.startCol == 7: # Quan xe ben phai
+                elif move.startCol == 7:  # Quan xe ben phai
                     self.currentCastlingRights.wks = False
         elif move.pieceMoved == "bR":
-            if move.startRow == 0: # Quan den
-                if move.startCol == 0: # Quan xe ben trai
+            if move.startRow == 0:  # Quan den
+                if move.startCol == 0:  # Quan xe ben trai
                     self.currentCastlingRights.bqs = False
-                elif move.startCol == 7: # Quan xe ben phai
+                elif move.startCol == 7:  # Quan xe ben phai
                     self.currentCastlingRights.bks = False
         # Neu quan xe bi bat'
         elif move.pieceCaptured == "wR":
@@ -164,35 +184,37 @@ class GameState():
                 elif move.endCol == 7:
                     self.currentCastlingRights.bks = False
 
-    #Di len hoac di qua trai thi tru`, di xuong hoac qua phai thi cong
+    # Di len hoac di qua trai thi tru`, di xuong hoac qua phai thi cong
     def getPawnMoves(self, r, c, moves):
-        if self.whiteToMove: # Luot di cua quan mau trang
-            if self.board[r - 1][c] == "--": # Quan tot di mot o vuong
+        if self.whiteToMove:  # Luot di cua quan mau trang
+            if self.board[r - 1][c] == "--":  # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r - 1, c), self.board))
-                if r == 6 and self.board[r-2][c] == "--": # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
+                if r == 6 and self.board[r - 2][
+                    c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r - 2, c), self.board))
-            if c - 1 >= 0: # Bat quan dich ben trai
+            if c - 1 >= 0:  # Bat quan dich ben trai
                 if self.board[r - 1][c - 1][0] == "b":
                     moves.append(Move((r, c), (r - 1, c - 1), self.board))
                 elif (r - 1, c - 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r - 1, c - 1), self.board, isEnpassant=True))
-            if c + 1 <= 7: # Bat quan dich ben phai
+            if c + 1 <= 7:  # Bat quan dich ben phai
                 if self.board[r - 1][c + 1][0] == "b":
                     moves.append(Move((r, c), (r - 1, c + 1), self.board))
                 elif (r - 1, c + 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r - 1, c + 1), self.board, isEnpassant=True))
 
-        else: # Luot di cua quan mau den
-            if self.board[r + 1][c] == "--": # Quan tot di mot o vuong
+        else:  # Luot di cua quan mau den
+            if self.board[r + 1][c] == "--":  # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r + 1, c), self.board))
-                if r == 1 and self.board[r + 2][c] == "--": # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
+                if r == 1 and self.board[r + 2][
+                    c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r + 2, c), self.board))
-            if c - 1 >= 0: # Bat quan dich ben trai
+            if c - 1 >= 0:  # Bat quan dich ben trai
                 if self.board[r + 1][c - 1][0] == "w":
                     moves.append(Move((r, c), (r + 1, c - 1), self.board))
                 elif (r + 1, c - 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r + 1, c - 1), self.board, isEnpassant=True))
-            if c + 1 <= 7: # Bat quan dich ben phai
+            if c + 1 <= 7:  # Bat quan dich ben phai
                 if self.board[r + 1][c + 1][0] == "w":
                     moves.append(Move((r, c), (r + 1, c + 1), self.board))
                 elif (r + 1, c + 1) == self.enpassantPossible:
@@ -200,26 +222,26 @@ class GameState():
 
     # Lay toan bo gia tri row va column cua ban co o moi huong di cua quan xe
     def getRookMoves(self, r, c, moves):
-        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)] # Huong di cua con xe (r, c)
+        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]  # Huong di cua con xe (r, c)
         #               len      trai    xuong    phai (lay quan trang lam chuan)
         if self.whiteToMove:
             enemyColor = "b"
         else:
             enemyColor = "w"
-        for d in directions: # Lay het toan bo huong di tinh ra tung toa do co the co cua huong di va them vo list moves
+        for d in directions:  # Lay het toan bo huong di tinh ra tung toa do co the co cua huong di va them vo list moves
             for i in range(1, 8):
-                endRow = r + d[0]*i
-                endCol = c + d[1]*i
+                endRow = r + d[0] * i
+                endCol = c + d[1] * i
                 if 0 <= endRow < 8 and 0 <= endCol < 8:
                     endPiece = self.board[endRow][endCol]
-                    if endPiece == "--": # Kiem tra neu la o vuong trong thi duoc di
+                    if endPiece == "--":  # Kiem tra neu la o vuong trong thi duoc di
                         moves.append(Move((r, c), (endRow, endCol), self.board))
-                    elif endPiece[0] == enemyColor: # Kiem tra neu la o vuong co quan co ke thu` thi duoc di
+                    elif endPiece[0] == enemyColor:  # Kiem tra neu la o vuong co quan co ke thu` thi duoc di
                         moves.append(Move((r, c), (endRow, endCol), self.board))
                         break
-                    else: # Neu la o vuong co quan co cung phe thi khong tinh theo huong di hien tai nua
+                    else:  # Neu la o vuong co quan co cung phe thi khong tinh theo huong di hien tai nua
                         break
-                else: # Vuot qua pham vi ban co
+                else:  # Vuot qua pham vi ban co
                     break
 
     # Lay toan bo gia tri row va column o moi huong di cua quan ma~ va them vao moves
@@ -234,7 +256,7 @@ class GameState():
             endCol = c + kd[1]
             if 0 <= endRow < 8 and 0 <= endCol < 8:
                 endPiece = self.board[endRow][endCol]
-                if endPiece[0] != allyColor: # Cach dung break chi ap dung cho 2 vong lap for
+                if endPiece[0] != allyColor:  # Cach dung break chi ap dung cho 2 vong lap for
                     moves.append(Move((r, c), (endRow, endCol), self.board))
 
     # Lay toan bo gia tri row va column cua quan tuong va them vao list moves
@@ -279,11 +301,13 @@ class GameState():
     def getCastleMoves(self, r, c, moves):
         # Dieu kien thu 2: Vua khong bi chieu
         if self.inCheck():
-            return # Neu bi chieu thi khong tien hanh buoc ghi nuoc di hop le
-        if (self.whiteToMove and self.currentCastlingRights.wks) or (not self.whiteToMove and self.currentCastlingRights.bks):
-            self.getKingSideCastleMove(r, c, moves) # Nhap thanh canh vua
-        if (self.whiteToMove and self.currentCastlingRights.wqs) or (not self.whiteToMove and self.currentCastlingRights.bqs):
-            self.getQueenSideCastleMove(r, c, moves) # Nhap thanh canh hau
+            return  # Neu bi chieu thi khong tien hanh buoc ghi nuoc di hop le
+        if (self.whiteToMove and self.currentCastlingRights.wks) or (
+                not self.whiteToMove and self.currentCastlingRights.bks):
+            self.getKingSideCastleMove(r, c, moves)  # Nhap thanh canh vua
+        if (self.whiteToMove and self.currentCastlingRights.wqs) or (
+                not self.whiteToMove and self.currentCastlingRights.bqs):
+            self.getQueenSideCastleMove(r, c, moves)  # Nhap thanh canh hau
 
     # Lay nuoc di nhap thanh hop le canh' vua va them vao list moves
     def getKingSideCastleMove(self, r, c, moves):
@@ -334,11 +358,11 @@ class GameState():
 
     # Kiem tra xem mot o vuong co nam duoi su tan cong cua quan dich khong, neu co tra ve True, khong tra ve False
     def squareUnderAttack(self, r, c):
-        self.whiteToMove = not self.whiteToMove # Doi sang luot cua quan dich
+        self.whiteToMove = not self.whiteToMove  # Doi sang luot cua quan dich
         oppMoves = self.getAllPossibleMove()
-        self.whiteToMove = not self.whiteToMove # Doi lai luot cua minh
+        self.whiteToMove = not self.whiteToMove  # Doi lai luot cua minh
         for move in oppMoves:
-            if move.endRow == r and move.endCol == c: # Neu toa do ma doi thu di chinh la toa do o vuong can xet thi tra ve True
+            if move.endRow == r and move.endCol == c:  # Neu toa do ma doi thu di chinh la toa do o vuong can xet thi tra ve True
                 return True
         return False
 
@@ -356,20 +380,20 @@ class GameState():
             self.getCastleMoves(self.blackKingLocation[0], self.blackKingLocation[1], moves)
 
         # 2. Voi moi nuoc di trong buoc 1, thuc hien mot nuoc di co trong list tren ban co
-        for i in range(len(moves)-1, -1, -1): # Duyet tu nuoc tu cuoi mang de khong bo sot phan tu nao
+        for i in range(len(moves) - 1, -1, -1):  # Duyet tu nuoc tu cuoi mang de khong bo sot phan tu nao
             self.makeMove(moves[i])
             # 3. Tao ra toan bo nuoc di co the cua doi thu
             # 4. Voi moi nuoc di cua doi thu, kiem tra xem co nuoc di nao tan cong vua cua minh khong
-            self.whiteToMove = not self.whiteToMove # Chuyen lai luot cua minh
+            self.whiteToMove = not self.whiteToMove  # Chuyen lai luot cua minh
             if self.inCheck():
                 moves.remove(moves[i])
-            self.whiteToMove = not self.whiteToMove # Chuyen lai thanh luot cua doi thu
-            self.undoMove() # undoMove de nuoc di do quay ve vi tri ban dau
+            self.whiteToMove = not self.whiteToMove  # Chuyen lai thanh luot cua doi thu
+            self.undoMove()  # undoMove de nuoc di do quay ve vi tri ban dau
 
-        if len(moves) == 0: #Quan vua bi chieu hoan toan khong co duong thoat nen khong co duong di nao duoc tao ra
-            if self.inCheck(): # Neu vua khong con duong thoat ,a the co` hien tai da chieu vua thi chieu tuong
+        if len(moves) == 0:  # Quan vua bi chieu hoan toan khong co duong thoat nen khong co duong di nao duoc tao ra
+            if self.inCheck():  # Neu vua khong con duong thoat ,a the co` hien tai da chieu vua thi chieu tuong
                 self.checkMate = True
-            else: # Neu vua khong con duong thoat ma the co hien tai chua chieu vua thi vao` the bi
+            else:  # Neu vua khong con duong thoat ma the co hien tai chua chieu vua thi vao` the bi
                 self.staleMate = True
 
         self.enpassantPossible = tempEnpassantPossible
@@ -377,10 +401,11 @@ class GameState():
         # 5. Tra ve danh sach cac nuoc di hop le
         return moves
 
+
 # Kiem tra nhap thanh`
 class CastlingRights():
     def __init__(self, wks, wqs, bks, bqs):
-        self.wks = wks # Nhap thanh canh vua trang' - White King Side
-        self.wqs = wqs # Nhap thanh canh hau trang' - White Queen Side
-        self.bks = bks # Nhap thanh canh vua den - Black King Sides
-        self.bqs = bqs # Nhap thanh canh hau den - Black Queen Side
+        self.wks = wks  # Nhap thanh canh vua trang' - White King Side
+        self.wqs = wqs  # Nhap thanh canh hau trang' - White Queen Side
+        self.bks = bks  # Nhap thanh canh vua den - Black King Sides
+        self.bqs = bqs  # Nhap thanh canh hau den - Black Queen Side

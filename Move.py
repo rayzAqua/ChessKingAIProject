@@ -7,11 +7,17 @@ class Move():
     # Vi tri phan tu hang tu 0 - 7 doi thanh 1 - 7
     # Vi tri phan tu cot, tu 0 - 7 doi thanh a - h
 
-    ranksToRows = {"1": 7, "2": 6, "3": 5, "4": 4,
-                   "5": 3, "6": 2, "7": 1, "8": 0}
+    # ranksToRows = {"1": 7, "2": 6, "3": 5, "4": 4,
+    #                "5": 3, "6": 2, "7": 1, "8": 0}
+    # rowsToRanks = {v: k for k, v in ranksToRows.items()}
+    # filesToCols = {"a": 0, "b": 1, "c": 2, "d": 3,
+    #                "e": 4, "f": 5, "g": 6, "h": 7}
+    # colsToFiles = {v: k for k, v in filesToCols.items()}
+    ranksToRows = {"1": 0, "2": 1, "3": 2, "4": 3,
+                   "5": 4, "6": 5, "7": 6, "8": 7}
     rowsToRanks = {v: k for k, v in ranksToRows.items()}
-    filesToCols = {"a": 0, "b": 1, "c": 2, "d": 3,
-                   "e": 4, "f": 5, "g": 6, "h": 7}
+    filesToCols = {"a": 7, "b": 6, "c": 5, "d": 4,
+                   "e": 3, "f": 2, "g": 1, "h": 0}
     colsToFiles = {v: k for k, v in filesToCols.items()}
 
     def __init__(self, startSq, endSq, board, isEnpassant=False, isCastleMove=False):
@@ -50,5 +56,5 @@ class Move():
     def getRankFile(self, r, c):
         return self.colsToFiles[c] + self.rowsToRanks[r]
 
-    def getChessNotation(self, move):
+    def getChessNotation(self): # self, move
         return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
