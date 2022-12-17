@@ -4,6 +4,7 @@ import sys
 from config import *
 from Button import Button
 import FormGamePlay as ChessMain
+import FormSwapColor as kingdom
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
@@ -12,18 +13,19 @@ def get_font(size):  # Returns Press-Start-2P in the desired size
 def onePlayer():
     pygame.display.set_caption("Chess King")
     pygame.display.set_icon(pygame.image.load("guiPNG/chessIcon.png"))
-    playerOne = False
-    playerTwo = False
-    ChessMain.main(playerOne, playerTwo)
-    # main = ChessMain.Main(False, True)
-    # main.mainloop()
+
+    kingdomColor = kingdom.drawKingdom()
+    if kingdomColor == "white":
+        ChessMain.main(True, False)
+    elif kingdomColor == "black":
+        ChessMain.main(False, True)
+
 
 def twoPlayer():
     pygame.display.set_caption("Chess King")
     pygame.display.set_icon(pygame.image.load("guiPNG/chessIcon.png"))
-    playerOne = True
-    playerTwo = True
-    ChessMain.main(playerOne, playerTwo)
+
+    ChessMain.main(True, True)
     # main.mainloop()
 
 def main_menu():

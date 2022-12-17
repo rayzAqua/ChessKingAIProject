@@ -19,7 +19,7 @@ import ChessBot as AI
 Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nhat lai hinh anh
 '''
 
-def main(playerOne, playerTwo):
+def main(player_one, player_two):
     pg.init()
     pg.display.set_icon(pg.image.load("guiPNG/chessIcon.png"))
     pg.display.set_caption("Chess King")
@@ -39,8 +39,8 @@ def main(playerOne, playerTwo):
     playerClick = []  # Giu lai vi tri hai o vuong ma nguoi choi chon de di nuoc co. VD: [(0, 7), (3, 1)] - chua 2 toa do
 
     # Luot nguoi choi la may hay la nguo
-    player1 = playerOne
-    player2 = playerTwo  # False = AI, True = Human
+    player1 = player_one
+    player2 = player_two  # False = AI, True = Human
 
     aiThingking = False
     moveFinderProcess = None
@@ -74,7 +74,7 @@ def main(playerOne, playerTwo):
                                 if move.isPawnPromotion:
                                     pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow, gs.whiteToMove)
                                     if pieceName != "":
-                                        gs.makeMove(validMoves[i], isBotPromote=False, pieceName=pieceName)
+                                        gs.makeMove(validMoves[i], pieceName=pieceName)
                                 else:
                                     print("Player: " + move.getChessNotation())
                                     gs.makeMove(validMoves[i])
@@ -86,6 +86,7 @@ def main(playerOne, playerTwo):
                             # Bat loi khi nguoi choi da chon 1 con co va sau do con 1 con co khac
                             # khi ng choi lam hanh dong nay thi toa do con list playerClick se la lam chon cuoi cung
                             playerClick = [sqSelected]
+                    # Bat su kien cac nut
                     if location[0]//WIDTH_BUTTON in range(6, 9) and location[1]//HEIGHT_BUTTON == 7:
                         col_btn = location[0]//WIDTH_BUTTON
                         row_btn = location[1]//HEIGHT_BUTTON
@@ -162,7 +163,7 @@ def main(playerOne, playerTwo):
                 AIMove = returnQueue.get()
                 if AIMove is None:
                     AIMove = AI.findRandomMoves(validMoves)
-                gs.makeMove(AIMove)
+                gs.makeMove(AIMove, isBotPromote=True)
                 print("AI:" + AIMove.getChessNotation())
                 moveMake = True
                 aiThingking = False

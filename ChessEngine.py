@@ -4,7 +4,6 @@ xac dinh cac nuoc di hop le cua ban co hien tai. No cung vo vai tro giu lai mot 
 """
 
 from Move import Move
-
 class GameState():
     def __init__(self):
         # Ban co 8x8 la mot list 2 chieu, tung phan tu cua list co 2 ky tu
@@ -21,6 +20,7 @@ class GameState():
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
+
         # Luot nguoi choi
         self.whiteToMove = True
         # Luu lai nuoc di cu~
@@ -43,7 +43,7 @@ class GameState():
                                                self.currentCastlingRights.bks, self.currentCastlingRights.bqs)]
 
     # Thuc hien mot nuoc di dua tren thong tin cua class Move
-    def makeMove(self, move, isBotPromote=True, pieceName=""):
+    def makeMove(self, move, isBotPromote=False, pieceName=""):
         # Normal Move
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.board[move.startRow][move.startCol] = "--"

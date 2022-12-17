@@ -30,7 +30,7 @@ def drawGameState(screen, gs, validMoves, sqSelected, moveLogFont):
 
 # Ve ban co va cac o vuong
 def drawBoard(screen):
-    colors = [pg.Color("White"), pg.Color("Gray")]  # vi tri tuong ung 0, 1
+    colors = [pg.Color("#FFFFCC"), pg.Color("#669933")]  # vi tri tuong ung 0, 1
     for row in range(DIMENSION):
         for col in range(DIMENSION):
             color = colors[
@@ -116,7 +116,7 @@ def drawAvatar(screen, image):
     # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
     # vị trí x = WIDTH và y = 0 lên màn hình chinh
     moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
-    pg.draw.rect(screen, pg.Color("#DCDCDC"), moveLogRect) # Vẽ nó lên màn hình
+    pg.draw.rect(screen, pg.Color("#FFFFFF"), moveLogRect) # Vẽ nó lên màn hình
 
     # Load ảnh từ thư mục vào biến avatar
     avatar = pg.image.load("guiPNG/avatarDemo.jpg")
@@ -142,7 +142,7 @@ def drawAvatar(screen, image):
 
 def drawMoveLog(screen, gs, font):
     moveLogRect = pg.Rect(WIDTH, HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, MOVE_LOG_PANEL_HEIGHT)
-    pg.draw.rect(screen, pg.Color("gray37"), moveLogRect)
+    pg.draw.rect(screen, pg.Color("#0066CC"), moveLogRect)
     moveLog = gs.moveLog
     moveTexts = []
     for i in range(0, len(moveLog), 2):
