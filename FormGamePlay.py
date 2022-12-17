@@ -76,7 +76,7 @@ def main(player_one, player_two):
                                     if pieceName != "":
                                         gs.makeMove(validMoves[i], pieceName=pieceName)
                                 else:
-                                    print("Player: " + move.getChessNotation())
+                                    # print("Player: " + move.getChessNotation())
                                     gs.makeMove(validMoves[i])
                                 moveMake = True
                                 moveUndo = False
@@ -164,7 +164,7 @@ def main(player_one, player_two):
                 if AIMove is None:
                     AIMove = AI.findRandomMoves(validMoves)
                 gs.makeMove(AIMove, isBotPromote=True)
-                print("AI:" + AIMove.getChessNotation())
+                # print("AI:" + AIMove.getChessNotation())
                 moveMake = True
                 aiThingking = False
 

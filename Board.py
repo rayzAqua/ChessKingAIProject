@@ -68,7 +68,7 @@ def drawHighLight(screen, gs, validMoves, sqSelected):
         if gs.board[r][c][0] == 'w' or gs.board[r][c][0] == 'b':
             # To mau cho o dang chon
             s = pg.Surface((SQ_SIZE, SQ_SIZE))
-            s.set_alpha(100)  # Do trong suot cua mau sac
+            s.set_alpha(200)  # Do trong suot cua mau sac
             s.fill(pg.Color("Orange"))
             screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))  # Ve lop anh mau cam len odang co toa do chuot dang chon
             # To mau cho cac o duong di
@@ -116,7 +116,7 @@ def drawAvatar(screen, image):
     # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
     # vị trí x = WIDTH và y = 0 lên màn hình chinh
     moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
-    pg.draw.rect(screen, pg.Color("#FFFFFF"), moveLogRect) # Vẽ nó lên màn hình
+    pg.draw.rect(screen, pg.Color("#666666"), moveLogRect) # Vẽ nó lên màn hình
 
     # Load ảnh từ thư mục vào biến avatar
     avatar = pg.image.load("guiPNG/avatarDemo.jpg")
@@ -142,7 +142,7 @@ def drawAvatar(screen, image):
 
 def drawMoveLog(screen, gs, font):
     moveLogRect = pg.Rect(WIDTH, HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, MOVE_LOG_PANEL_HEIGHT)
-    pg.draw.rect(screen, pg.Color("#0066CC"), moveLogRect)
+    pg.draw.rect(screen, pg.Color("#EEEEEE"), moveLogRect)
     moveLog = gs.moveLog
     moveTexts = []
     for i in range(0, len(moveLog), 2):
@@ -171,7 +171,7 @@ def drawMoveLog(screen, gs, font):
 def drawMoveButton(screen):
 
     moveLogRect = pg.Rect(WIDTH, MOVE_LOG_PANEL_HEIGHT + HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) #400 x 100
-    pg.draw.rect(screen, pg.Color("#DCDCDC"), moveLogRect)
+    pg.draw.rect(screen, pg.Color("#666666"), moveLogRect)
 
     back = pg.image.load("guiPNG/skip-back.png")
     screen.blit(back, moveLogRect.move(back.get_width()/2-4, HEIGHT_BUTTON/2-back.get_height()/2))
