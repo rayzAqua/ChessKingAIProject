@@ -4,6 +4,9 @@ Ve ban co
 
 import pygame as pg
 import sys
+
+import pygame.font
+
 from config import *
 from Button import Button
 import FormMainMenu
@@ -21,7 +24,7 @@ def drawGameState(screen, gs, validMoves, sqSelected, moveLogFont):
     drawPieces(screen, gs.board)  # Ve ra quan co tren ban co dua vao gamestate.board hien tai
     drawHighLight(screen, gs, validMoves, sqSelected)  # Ve highlight cho lua chon
     drawMoveLog(screen, gs, moveLogFont)
-    drawMoveButton(screen, gs, Button)
+    # drawMoveButton(screen, gs, Button)
     drawAvatar(screen, gs)
 
 
@@ -51,11 +54,11 @@ def drawPieces(screen, board):
 def drawText(screen, text, colorOne, colorTwo):
     font = pg.font.SysFont("Helvitca", 32, True, False)
     textObject = font.render(text, 0, pg.Color(colorOne))
-    textLocation = pg.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - textObject.get_width() / 2,
-                                                     HEIGHT / 2 - textObject.get_height() / 2)
+    textLocation = pg.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - textObject.get_width() / 2, HEIGHT / 2 - textObject.get_height() / 2)
     screen.blit(textObject, textLocation)
     textObject = font.render(text, 0, pg.Color(colorTwo))
     screen.blit(textObject, textLocation.move(2, 2))
+    pg.display.update()
 
 
 # Ve duong di quan co
@@ -72,12 +75,7 @@ def drawHighLight(screen, gs, validMoves, sqSelected):
             s.fill(pg.Color("Yellow"))  # doi mau tu cam sang vang
             for move in validMoves:
                 if move.startRow == r and move.startCol == c:  # Neu dung la quan co minh dang chon
-                    screen.blit(s, (
-                    move.endCol * SQ_SIZE, move.endRow * SQ_SIZE))  # Ve lop anh mau vang len duong di cua no
-
-
-def drawPromote(isPawnPromote):
-    pass
+                    screen.blit(s, (move.endCol * SQ_SIZE, move.endRow * SQ_SIZE))  # Ve lop anh mau vang len duong di cua no
 
 
 # Ve ky hieu co len ban co
@@ -93,8 +91,7 @@ def drawChessColNotation(screen, font):
     colors = [pg.Color('black'), pg.Color('white')]  # vi tri tuong ung 0, 1
     for r in range(DIMENSION):
         for c in range(DIMENSION):
-            color = colors[
-                (r + c) % 2]  # tra ve hai so 0, 1 dua tren tong trung binh cua hang va cot va to mau tuong ung
+            color = colors[ (r + c) % 2]  # tra ve hai so 0, 1 dua tren tong trung binh cua hang va cot va to mau tuong ung
             text = font.render(colRank[r], True, pg.Color(color))
             if c == 0:
                 screen.blit(text, pg.Rect(0, 0, SQ_SIZE / 4, SQ_SIZE / 4).move(SQ_SIZE * c + 5, SQ_SIZE * r + 5))
@@ -113,23 +110,35 @@ def drawChessRowNotation(screen, font):
                 screen.blit(text, pg.Rect(0, 0, SQ_SIZE / 4, SQ_SIZE / 4).move(SQ_SIZE * c + 80, SQ_SIZE * r + 80))
 
 
+# Ve avatar
 def drawAvatar(screen, image):
-    def get_font(size):  # Returns Press-Start-2P in the desired size
-        return pg.font.Font("guiPNG/font.ttf", size)
 
-    moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON)
-    pg.draw.rect(screen, pg.Color("#DCDCDC"), moveLogRect)
+    # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
+    # vị trí x = WIDTH và y = 0 lên màn hình chinh
+    moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
+    pg.draw.rect(screen, pg.Color("#DCDCDC"), moveLogRect) # Vẽ nó lên màn hình
 
-    AVATAR = Button(image=pg.image.load("guiPNG/avatar.png"), pos=(850, 50),
-                    text_input=None, font=get_font(20), base_color="White", hovering_color="Gray")
+    # Load ảnh từ thư mục vào biến avatar
+    avatar = pg.image.load("guiPNG/avatarDemo.jpg")
+    # Định dạng lại kích cỡ avatar
+    avatar = pg.transform.scale(avatar, (64, 64))
+    # Vẽ avatar lên hình chữ nhật vừa tạo phía trên và avatar đc vẽ tại vị trí
+    # (avatar.get_width()/2-4, HEIGHT_BUTTON/2-avatar.get_height()/2)
+    screen.blit(avatar, moveLogRect.move(avatar.get_width()/2-14, HEIGHT_BUTTON/2-avatar.get_height()/2))
+    # Load font từ thư mục guiPNG vào biến font và đặt cỡ chữ là 12
+    font = pygame.font.Font("guiPNG/font.ttf", 12)
+    # Từ biến font tạo ra chuỗi ký tự text
+    text = font.render("PLAYER NAME - LEVEL: EASY", True, pg.Color("Black"))
+    # Tạo ra một lớp hình chữ nhật để hỗ trợ vẽ chữ
+    # Toạ độ x: HEIGHT + avatar.get_width() + 30
+    # Toạ độ y: 0
+    # Chiều rộng: MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54
+    # Chiều cao: HEIGHT_BUTTON
+    text_rect = pg.Rect(HEIGHT + avatar.get_width() + 30, 0,
+                        (MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54), HEIGHT_BUTTON)
+    # Vẽ chữ lên lớp hình text_rect và dịch chuyển lớp hình vừa vẽ xuống trung tâm
+    screen.blit(text, text_rect.move(0, HEIGHT_BUTTON/2))
 
-    for button in [AVATAR]:
-        button.update(screen)
-
-# def showInformationPlayer():
-#     name_text = FormMainMenu.get_font(30).render('FULLNAME Test', True, "#b68f40")
-#     name_rect = name_text.get_rect(850, 100)
-#     screen.blit(name_text, name_rect)
 
 def drawMoveLog(screen, gs, font):
     moveLogRect = pg.Rect(WIDTH, HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, MOVE_LOG_PANEL_HEIGHT)
@@ -159,37 +168,18 @@ def drawMoveLog(screen, gs, font):
 
 
 # Vi tri dat ham nay co van  de nen k bat su kien code dc, neu muon bat thi rat phuc tap
-def drawMoveButton(screen, gs, button):
-    def get_font(size):  # Returns Press-Start-2P in the desired size
-        return pg.font.Font("guiPNG/font.ttf", size)
+def drawMoveButton(screen):
 
-    moveLogRect = pg.Rect(WIDTH, MOVE_LOG_PANEL_HEIGHT + HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON)
+    moveLogRect = pg.Rect(WIDTH, MOVE_LOG_PANEL_HEIGHT + HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) #400 x 100
     pg.draw.rect(screen, pg.Color("#DCDCDC"), moveLogRect)
 
-    MENU_MOUSE_POS = pg.mouse.get_pos()
+    back = pg.image.load("guiPNG/skip-back.png")
+    screen.blit(back, moveLogRect.move(back.get_width()/2-4, HEIGHT_BUTTON/2-back.get_height()/2))
 
-    BACK = Button(image=pg.image.load("guiPNG/skip-back.png"), pos=(850, 750),
-                  text_input=None, font=get_font(20), base_color="Gray32", hovering_color="White")
+    reset = pg.image.load("guiPNG/reset1.png")
+    screen.blit(reset, moveLogRect.move((reset.get_width() + (reset.get_width()/2-8)*4+4), HEIGHT_BUTTON/2-reset.get_height()/2))
 
-    HOME = Button(image=pg.image.load("guiPNG/home.png"), pos=(1150, 750),
-                  text_input=None, font=get_font(20), base_color="Gray32", hovering_color="White")
-    RESET = Button(image=pg.image.load("guiPNG/reset1.png"), pos=(1000, 750),
-                   text_input=None, font=get_font(20), base_color="Gray32", hovering_color="White")
-
-    for button in [BACK, HOME, RESET]:
-        button.changeColor(MENU_MOUSE_POS)
-        button.update(screen)
-
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            sys.exit()
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if BACK.checkForInput(MENU_MOUSE_POS):
-                pass
-            if RESET.checkForInput(MENU_MOUSE_POS):
-                pass
-            if HOME.checkForInput(MENU_MOUSE_POS):
-                pass
+    home = pg.image.load("guiPNG/home.png")
+    screen.blit(home, moveLogRect.move((home.get_width() + (home.get_width()/2-8)*10), HEIGHT_BUTTON/2-home.get_height()/2))
 
     pg.display.update()

@@ -5,7 +5,6 @@ xac dinh cac nuoc di hop le cua ban co hien tai. No cung vo vai tro giu lai mot 
 
 from Move import Move
 
-
 class GameState():
     def __init__(self):
         # Ban co 8x8 la mot list 2 chieu, tung phan tu cua list co 2 ky tu
@@ -44,7 +43,7 @@ class GameState():
                                                self.currentCastlingRights.bks, self.currentCastlingRights.bqs)]
 
     # Thuc hien mot nuoc di dua tren thong tin cua class Move
-    def makeMove(self, move, isHuman=False, pieceName=""):
+    def makeMove(self, move, isBotPromote=True, pieceName=""):
         # Normal Move
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.board[move.startRow][move.startCol] = "--"
@@ -59,21 +58,10 @@ class GameState():
 
         # Pawn Promotion
         if move.isPawnPromotion:
-            # Khi getValidMove() duoc thuc thi se lay toan bo nuoc di cua quan trang roi bo vao list
-            # Vo tinh getValidMove() cung thuc hien nuoc di phong tuoc cho con tot nen doan code nay chay
-            # khien cho chuong trinh bi loi vi luc nay nguoi choi chua thuc hien nuoc di.
-            # Giai phap: AI se luon phong tot lam quan hau.
-            if isHuman:
-                if pieceName == "Q":
-                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
-                elif pieceName == "B":
-                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
-                elif pieceName == "R":
-                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
-                elif pieceName == "N":
-                    self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
-            else:
+            if isBotPromote:
                 self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "Q"
+            else:
+                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
 
         # En passsant
         # Neu con tot di 2 nuoc thi luot tiep theo co the thuc hien en passant - luu vi tri duoc phep di vao list enpassant
@@ -83,11 +71,6 @@ class GameState():
             self.enpassantPossible = ()
 
         if move.isEnpassant:  # Bat con tot quan dich
-            # Co mot Bug do la: Thang getValidMove thuc hien thanh cong buoc nay, nhung khi no undo ve de nguoi choi thuc hien
-            # thi lai khong hoat dong duoc
-            # Giai phap: Thuc hien mot nuoc di trong danh sach valid move thay vi thuc hien nuoc di move do player tao ra
-            # Them mot Bug nua la: khi Undo ve thi khong thuc hien duoc en passant nua
-            # Giai phap: Tao ra mot log rieng cua enpassant
             self.board[move.startRow][move.endCol] = "--"
         # Luu lai nuoc di enpassant
         self.enpassantPossibleLog.append(self.enpassantPossible)
@@ -189,8 +172,7 @@ class GameState():
         if self.whiteToMove:  # Luot di cua quan mau trang
             if self.board[r - 1][c] == "--":  # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r - 1, c), self.board))
-                if r == 6 and self.board[r - 2][
-                    c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
+                if r == 6 and self.board[r - 2][c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r - 2, c), self.board))
             if c - 1 >= 0:  # Bat quan dich ben trai
                 if self.board[r - 1][c - 1][0] == "b":
@@ -206,8 +188,7 @@ class GameState():
         else:  # Luot di cua quan mau den
             if self.board[r + 1][c] == "--":  # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r + 1, c), self.board))
-                if r == 1 and self.board[r + 2][
-                    c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
+                if r == 1 and self.board[r + 2][c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r + 2, c), self.board))
             if c - 1 >= 0:  # Bat quan dich ben trai
                 if self.board[r + 1][c - 1][0] == "w":

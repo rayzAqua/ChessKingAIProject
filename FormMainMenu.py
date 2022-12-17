@@ -10,13 +10,17 @@ def get_font(size):  # Returns Press-Start-2P in the desired size
     return pygame.font.Font("guiPNG/font.ttf", size)
 
 def onePlayer():
-    playerOne = True
+    pygame.display.set_caption("Chess King")
+    pygame.display.set_icon(pygame.image.load("guiPNG/chessIcon.png"))
+    playerOne = False
     playerTwo = False
     ChessMain.main(playerOne, playerTwo)
     # main = ChessMain.Main(False, True)
     # main.mainloop()
 
 def twoPlayer():
+    pygame.display.set_caption("Chess King")
+    pygame.display.set_icon(pygame.image.load("guiPNG/chessIcon.png"))
     playerOne = True
     playerTwo = True
     ChessMain.main(playerOne, playerTwo)
@@ -66,8 +70,7 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    pygame.quit()
-                    import FormSignIn
+                    onePlayer()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     twoPlayer()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):

@@ -6,11 +6,14 @@ nguoi dung và hien thi trang thai tro choi
 import pygame as pg
 import sys
 from multiprocessing import Process, Queue
+
+import Button
+import FormPawnPromote
 from config import *
 import ChessEngine
 import Board
 import ChessBot as AI
-import FormPawnPromote
+
 
 '''
 Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nhat lai hinh anh
@@ -25,7 +28,6 @@ def main(playerOne, playerTwo):
     gs = ChessEngine.GameState()  # Trang thai ban co
     clock = pg.time.Clock()
     Board.loadImage()
-    Board.showInformationPlayer()
 
     moveLogFont = pg.font.SysFont("Arial", 12, False, False)
     # Lay nuoc di hop le - lay mot lan truoc khi vao vong lap
@@ -70,26 +72,48 @@ def main(playerOne, playerTwo):
                         for i in range(len(validMoves)):
                             if move == validMoves[i]:
                                 if move.isPawnPromotion:
-                                    FormPawnPromote.drawPromote(screen, move.endCol, move.endRow)
-                                    pieceName = "Q"
-                                    gs.makeMove(validMoves[i], isHuman=True, pieceName=pieceName)
+                                    pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow, gs.whiteToMove)
+                                    if pieceName != "":
+                                        gs.makeMove(validMoves[i], isBotPromote=False, pieceName=pieceName)
                                 else:
                                     print("Player: " + move.getChessNotation())
-                                    # Vi nguoi choi thuc hien nuoc di enpassant hay castling thi may' se khong hieu
-                                    # cho nen ta co y tuong la thuc hien nuoc di trong validMoves chu khong thuc hien
-                                    # nuoc di move do nguoi choi tao ra.
-                                    # Muc tieu cua dieu nay la de khac phuc viec may' khong phan biet duoc luc nao la true, false
-                                    # cua nuoc di enpassant, castling.
-                                    # Neu la nuoc di cua nguoi choi tao ra thi se luon luon la isEnpassant = False
-                                    # Neu la nuoc di trong validMoves thi neu la en passant thi thi en passant luon luon la True
                                     gs.makeMove(validMoves[i])
                                 moveMake = True
+                                moveUndo = False
                                 sqSelected = ()  # Reset
                                 playerClick = []  # Reset
                         if not moveMake:
                             # Bat loi khi nguoi choi da chon 1 con co va sau do con 1 con co khac
                             # khi ng choi lam hanh dong nay thi toa do con list playerClick se la lam chon cuoi cung
                             playerClick = [sqSelected]
+                    if location[0]//WIDTH_BUTTON in range(6, 9) and location[1]//HEIGHT_BUTTON == 7:
+                        col_btn = location[0]//WIDTH_BUTTON
+                        row_btn = location[1]//HEIGHT_BUTTON
+                        if (row_btn, col_btn) == (7, 6):
+                            gs.undoMove()
+                            moveMake = True
+                            gameOver = False
+                            if aiThingking:
+                                moveFinderProcess.terminate()
+                                aiThingking = False
+                            moveUndo = True
+                        elif (row_btn, col_btn) == (7, 7):
+                            gs = ChessEngine.GameState()
+                            validMoves = gs.getValidMove()
+                            moveMake = False
+                            sqSelected = ()
+                            playerClick = []
+                            gameOver = False
+                            moveUndo = False
+                            if aiThingking:
+                                moveFinderProcess.terminate()
+                                aiThingking = False
+                                moveMake = True
+                                moveFinderProcess = None
+                        elif (row_btn, col_btn) == (7, 8):
+                            if aiThingking:
+                                moveFinderProcess.terminate()
+                            running = False
 
             elif e.type == pg.KEYDOWN:
                 if e.key == pg.K_z:
@@ -107,7 +131,12 @@ def main(playerOne, playerTwo):
                     sqSelected = ()
                     playerClick = []
                     gameOver = False
-                    moveUndo = True
+                    moveUndo = False
+                    if aiThingking:
+                        moveFinderProcess.terminate()
+                        aiThingking = False
+                        moveMake = True
+                        moveFinderProcess = None
                 elif e.key == pg.K_ESCAPE:
                     if aiThingking:
                         moveFinderProcess.terminate()
@@ -144,7 +173,7 @@ def main(playerOne, playerTwo):
             moveUndo = False
 
         Board.drawGameState(screen, gs, validMoves, sqSelected, moveLogFont)
-
+        Board.drawMoveButton(screen)
 
         if gs.checkMate:
             gameOver = True
