@@ -86,7 +86,7 @@ def main(player_one, player_two):
                             # Bat loi khi nguoi choi da chon 1 con co va sau do con 1 con co khac
                             # khi ng choi lam hanh dong nay thi toa do con list playerClick se la lam chon cuoi cung
                             playerClick = [sqSelected]
-                    # Bat su kien cac nut
+                    # Bat su kien cac nut khi dung chuot
                     if location[0]//WIDTH_BUTTON in range(6, 9) and location[1]//HEIGHT_BUTTON == 7:
                         col_btn = location[0]//WIDTH_BUTTON
                         row_btn = location[1]//HEIGHT_BUTTON
@@ -115,7 +115,7 @@ def main(player_one, player_two):
                             if aiThingking:
                                 moveFinderProcess.terminate()
                             running = False
-
+            # Bat su kien cac nut khi dung ban phim
             elif e.type == pg.KEYDOWN:
                 if e.key == pg.K_z:
                     gs.undoMove()
@@ -179,15 +179,54 @@ def main(player_one, player_two):
         if gs.checkMate:
             gameOver = True
             if gs.whiteToMove:
-                Board.drawText(screen, 'QUAN DEN THANG BOI CHIEU TUONG', "Gray", "Black")
+                case = Board.drawText(screen, "Black Win", "Gray", "Black", gameOver)
+
             else:
-                Board.drawText(screen, 'QUAN TRANG THANG BOI CHIEU TUONG', "Black", "White")
+                case = Board.drawText(screen, "White Win", "Gray", "White", gameOver)
+
+            if case == "undo":
+                gs.undoMove()
+                moveMake = True
+                gameOver = False
+
+            elif case == "reset":
+                gs = ChessEngine.GameState()
+                validMoves = gs.getValidMove()
+                moveMake = False
+                sqSelected = ()
+                playerClick = []
+                gameOver = False
+                moveUndo = False
+
+            elif case == "back":
+                gameOver = False
+                running = False
+
         elif gs.staleMate:
             gameOver = True
             if gs.whiteToMove:
-                Board.drawText(screen, 'Chieu bi - Quan trang da thua', "Black", "Red")
+                case = Board.drawText(screen, "Stalemate", "Black", "Red", gameOver)
+
             else:
-                Board.drawText(screen, 'Chieu bi - Quan den da thua', "Black", "Red")
+                case = Board.drawText(screen, "Stalemate", "Black", "Red", gameOver)
+
+            if case == "undo":
+                gs.undoMove()
+                moveMake = True
+                gameOver = False
+
+            elif case == "reset":
+                gs = ChessEngine.GameState()
+                validMoves = gs.getValidMove()
+                moveMake = False
+                sqSelected = ()
+                playerClick = []
+                gameOver = False
+                moveUndo = False
+
+            elif case == "back":
+                gameOver = False
+                running = False
 
         clock.tick(MAX_FPS)  # 1 giay co max_fps khung hinh
         pg.display.flip()

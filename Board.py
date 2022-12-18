@@ -51,14 +51,44 @@ def drawPieces(screen, board):
 # Load hinh anh vao mot set
 
 # Ve chu
-def drawText(screen, text, colorOne, colorTwo):
-    font = pg.font.SysFont("Helvitca", 32, True, False)
-    textObject = font.render(text, 0, pg.Color(colorOne))
-    textLocation = pg.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - textObject.get_width() / 2, HEIGHT / 2 - textObject.get_height() / 2)
+def drawText(screen, text, color1, color2, gameOver):
+
+    endGame = pg.Surface((WIDTH/2, HEIGHT/2))
+    endGame.fill("Gray32")
+    endGame.set_alpha(250)
+    screen.blit(endGame, (WIDTH/4, HEIGHT/4))
+
+    decor = pg.Surface((WIDTH/2-50, HEIGHT/7))
+    decor.fill("Gray20")
+    decor.set_alpha(200)
+    screen.blit(decor, (WIDTH/4+25, HEIGHT/4+25))
+
+    font = pg.font.Font("guiPNG/font.ttf", 20)
+    textObject = font.render(text, True, pg.Color(color1))
+    textLocation = pg.Rect(0, 0, WIDTH, HEIGHT).move(WIDTH / 2 - textObject.get_width() / 2, HEIGHT / 3 + 5)
     screen.blit(textObject, textLocation)
-    textObject = font.render(text, 0, pg.Color(colorTwo))
-    screen.blit(textObject, textLocation.move(2, 2))
-    pg.display.update()
+    textObject = font.render(text, True, pg.Color(color2))
+    screen.blit(textObject, textLocation.move(1, 1))
+
+    while gameOver:
+        mouse_endgame_pos = pg.mouse.get_pos()
+        col = mouse_endgame_pos[0] // SQ_SIZE
+        row = mouse_endgame_pos[1] // SQ_SIZE
+
+        for e in pg.event.get():
+            if e.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            elif e.type == pg.MOUSEBUTTONDOWN:
+                c = mouse_endgame_pos[0] // WIDTH_BUTTON
+                r = mouse_endgame_pos[1] // HEIGHT_BUTTON
+                if (r, c) == (7, 6):
+                    return "undo"
+                elif (r, c) == (7, 7):
+                    return "reset"
+                elif (r, c) == (7, 8):
+                    return "back"
+        pg.display.update()
 
 
 # Ve duong di quan co
@@ -128,7 +158,8 @@ def drawAvatar(screen, image):
     # Load font từ thư mục guiPNG vào biến font và đặt cỡ chữ là 12
     font = pygame.font.Font("guiPNG/font.ttf", 12)
     # Từ biến font tạo ra chuỗi ký tự text
-    text = font.render("PLAYER NAME - LEVEL: EASY", True, pg.Color("Black"))
+    text_name = font.render("PLAYER NAME", True, pg.Color("Black"))
+    text_level = font.render("LEVEL: EASY", True, pg.Color("Black"))
     # Tạo ra một lớp hình chữ nhật để hỗ trợ vẽ chữ
     # Toạ độ x: HEIGHT + avatar.get_width() + 30
     # Toạ độ y: 0
@@ -137,7 +168,8 @@ def drawAvatar(screen, image):
     text_rect = pg.Rect(HEIGHT + avatar.get_width() + 30, 0,
                         (MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54), HEIGHT_BUTTON)
     # Vẽ chữ lên lớp hình text_rect và dịch chuyển lớp hình vừa vẽ xuống trung tâm
-    screen.blit(text, text_rect.move(0, HEIGHT_BUTTON/2))
+    screen.blit(text_name, text_rect.move(0, HEIGHT_BUTTON/3))
+    screen.blit(text_level, text_rect.move(0, HEIGHT_BUTTON/2 + 10))
 
 
 def drawMoveLog(screen, gs, font):
@@ -148,10 +180,10 @@ def drawMoveLog(screen, gs, font):
     for i in range(0, len(moveLog), 2):
         moveString = str(i // 2 + 1) + ". " + moveLog[i].getChessNotation() + "  "
         if i + 1 < len(moveLog):
-            moveString += moveLog[i + 1].getChessNotation() + "                "
+            moveString += moveLog[i + 1].getChessNotation() + "     "
         moveTexts.append(moveString)
 
-    movesPerRow = 2
+    movesPerRow = 3
     padding = 5
     lineSpacing = 2
     textY = padding
@@ -182,4 +214,4 @@ def drawMoveButton(screen):
     home = pg.image.load("guiPNG/home.png")
     screen.blit(home, moveLogRect.move((home.get_width() + (home.get_width()/2-8)*10), HEIGHT_BUTTON/2-home.get_height()/2))
 
-    pg.display.update()
+    # pg.display.update()

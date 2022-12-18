@@ -19,6 +19,8 @@ def onePlayer():
         ChessMain.main(True, False)
     elif kingdomColor == "black":
         ChessMain.main(False, True)
+    elif kingdomColor == "bot":
+        ChessMain.main(False, False)
 
 
 def twoPlayer():
@@ -47,13 +49,13 @@ def main_menu():
 
         # Draw Button
         PLAY_BUTTON = Button(image=pygame.image.load("guiPNG/Play Rect.png"), pos=(WIDTH_MENU / 2, 300),
-                             text_input="1 PLAYER", font=get_font(40), base_color="White",
+                             text_input="1 PLAYER", font=get_font(30), base_color="White",
                              hovering_color="Gray")
         OPTIONS_BUTTON = Button(image=pygame.image.load("guiPNG/Play Rect.png"), pos=(WIDTH_MENU / 2, 450),
-                                text_input="2 PLAYER", font=get_font(40), base_color="White",
+                                text_input="2 PLAYER", font=get_font(30), base_color="White",
                                 hovering_color="Gray")
         QUIT_BUTTON = Button(image=pygame.image.load("guiPNG/Quit Rect.png"), pos=(WIDTH_MENU / 2, 600),
-                             text_input="QUIT", font=get_font(40), base_color="White", hovering_color="Gray")
+                             text_input="QUIT", font=get_font(30), base_color="White", hovering_color="Gray")
 
         # Draw credit text
         credits_text = get_font(12).render("Create by group 2", True, "#b77f42")

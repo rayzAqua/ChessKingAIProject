@@ -83,7 +83,7 @@ def findBestMove(gs, validMoves, returnQueue):
     random.shuffle(validMoves)
     # findMoveMinMaxAlphaBeta(gs, validMoves, DEPTH, -CHECKMATE, CHECKMATE, gs.whiteToMove)
     findMoveNegaMaxAlphaBeta(gs, validMoves, DEPTH, -CHECKMATE, CHECKMATE, 1 if gs.whiteToMove else -1)
-    print(counter)
+    # print(counter)
     returnQueue.put(botBestMove)
 
 # Giai thuat MinMax: Giai thuat luon tim cach lam max diem so nuoc di cua minh sao cho no la lon nhat
