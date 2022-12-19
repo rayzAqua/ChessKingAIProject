@@ -173,7 +173,7 @@ def main(player_one, player_two):
             moveMake = False
             moveUndo = False
 
-        Board.drawGameState(screen, gs, validMoves, sqSelected, moveLogFont)
+        Board.drawGameState(screen, gs, validMoves, sqSelected)
         Board.drawMoveButton(screen)
 
         if gs.checkMate:

@@ -23,6 +23,7 @@ HEIGHT_BUTTON = 100
 '''
 Other
 '''
+PIECE_NAME = []
 # Tối đa số lần lặp trong một giây (FPS)
 MAX_FPS = 15
 # Một thư viện ảnh dùng lưu trữ ảnh của từng quân cờ

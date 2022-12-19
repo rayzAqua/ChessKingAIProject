@@ -18,12 +18,12 @@ def loadImage():  # Load tung anh
 
 
 # Ve mot ban co hoan chinh
-def drawGameState(screen, gs, validMoves, sqSelected, moveLogFont):
+def drawGameState(screen, gs, validMoves, sqSelected):
     drawBoard(screen)  # Ve ra mot ban co voi kich thuoc WIDTH, HEIGHT
     drawChessNotation(screen)
     drawPieces(screen, gs.board)  # Ve ra quan co tren ban co dua vao gamestate.board hien tai
     drawHighLight(screen, gs, validMoves, sqSelected)  # Ve highlight cho lua chon
-    drawMoveLog(screen, gs, moveLogFont)
+    drawMoveLog(screen, gs)
     # drawMoveButton(screen, gs, Button)
     drawAvatar(screen, gs)
 
@@ -172,27 +172,27 @@ def drawAvatar(screen, image):
     screen.blit(text_level, text_rect.move(0, HEIGHT_BUTTON/2 + 10))
 
 
-def drawMoveLog(screen, gs, font):
+def drawMoveLog(screen, gs):
     moveLogRect = pg.Rect(WIDTH, HEIGHT_BUTTON, MOVE_LOG_PANEL_WIDTH, MOVE_LOG_PANEL_HEIGHT)
     pg.draw.rect(screen, pg.Color("#EEEEEE"), moveLogRect)
     moveLog = gs.moveLog
     moveTexts = []
     for i in range(0, len(moveLog), 2):
-        moveString = str(i // 2 + 1) + ". " + moveLog[i].getChessNotation() + "  "
-        if i + 1 < len(moveLog):
-            moveString += moveLog[i + 1].getChessNotation() + "     "
+        moveString = str(i//2+1) + ". " + str(moveLog[i]) + " "
+        if i+1 < len(moveLog):
+            moveString += str(moveLog[i+1]) + "   "
         moveTexts.append(moveString)
 
-    movesPerRow = 3
+    movesPerRow = 4
     padding = 5
     lineSpacing = 2
     textY = padding
+    font = pg.font.SysFont("Arial", 20, False, False)
     for i in range(0, len(moveTexts), movesPerRow):
         text = " "
         for j in range(movesPerRow):
-            if i + j < len(moveTexts):
-                text += moveTexts[i + j]
-        font = pg.font.SysFont("Arial", 20, False, False)
+            if i+j < len(moveTexts):
+                text += moveTexts[i+j]
         textObject = font.render(text, True, pg.Color('black'))
         textLocation = moveLogRect.move(padding, textY)
         screen.blit(textObject, textLocation)

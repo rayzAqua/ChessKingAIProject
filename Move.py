@@ -2,6 +2,8 @@
 Mot class co vai tro cuc ky quan trong, class nay tao ra cac nuoc di dua tren thong tin toa do con tro chuot dang chon
 '''
 
+from config import *
+
 class Move():
     # Chuyen cac vi tri trong List board thanh cac ky hieu tuong ung tren ban co vua
     # Vi tri phan tu hang tu 0 - 7 doi thanh 1 - 7
@@ -28,7 +30,7 @@ class Move():
         self.endCol = endSq[1]
         self.pieceMoved = board[self.startRow][self.startCol]  # Luu lai toa do ban dau cua quan co
         self.pieceCaptured = board[self.endRow][self.endCol]  # Luu lai toa do ban dau cua o vuong dc chon thu 2
-        self.moveID = self.startRow*1000 + self.startCol*100 + self.endRow*10 + self.endCol
+        self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
         # Pawn Promote
         self.isPawnPromotion = False
         if (self.pieceMoved == "wp" and self.endRow == 0) or (self.pieceMoved == "bp" and self.endRow == 7):
@@ -39,6 +41,8 @@ class Move():
             self.pieceCaptured = 'bp' if self.pieceMoved == 'wp' else 'wp'
         # Castling
         self.isCastleMove = isCastleMove
+        # Captured
+        self.isCapture = self.pieceCaptured != "--"
 
     # Vi class Move khong hieu duoc hai gia tri class giong het nhau la bang nhau nen can ham nay de kiem tra xem class co bang nhau khong
     # moves = [Move((6, 4), (4, 4), self.board)]: Day la danh sach chua cac nuoc di hop le
@@ -56,5 +60,31 @@ class Move():
     def getRankFile(self, r, c):
         return self.colsToFiles[c] + self.rowsToRanks[r]
 
-    def getChessNotation(self): # self, move
+    def getChessNotation(self):  # self, move
         return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
+
+    def __str__(self):
+        # castle move
+        if self.isCastleMove:
+            return "O-O" if self.endCol == 6 else "O-O-O"
+
+        endSquare = self.getRankFile(self.endRow, self.endCol)
+        if self.pieceMoved[1] == "p":
+            if self.isPawnPromotion:
+                return endSquare + "=+"
+            elif self.isCapture:
+                return self.colsToFiles[self.startCol] + "x" + endSquare
+            else:
+                return endSquare
+
+        # Lay ky hieu cac quan co con lai
+        moveString = self.pieceMoved[1]
+        if self.isCapture:
+            moveString += "x"
+            return moveString + endSquare
+
+        else:
+            return moveString + endSquare
+
+
+

@@ -20,6 +20,16 @@ class GameState():
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
+        # self.board = [
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "wp", "--", "--", "--", "--", "--"],
+        #     ["--", "--", "--", "--", "--", "--", "--", "--"]
+        # ]
 
         # Luot nguoi choi
         self.whiteToMove = True
@@ -78,12 +88,12 @@ class GameState():
         # Castling
         if move.isCastleMove:
             if move.endCol - move.startCol == 2:  # Nhap thanh canh vua
-                self.board[move.endRow][move.endCol - 1] = self.board[move.endRow][
-                    move.endCol + 1]  # Copy con xe vao o ben trai vua
+                # Copy con xe vao o ben trai vua
+                self.board[move.endRow][move.endCol - 1] = self.board[move.endRow][move.endCol + 1]
                 self.board[move.endRow][move.endCol + 1] = "--"  # Xoa con xe cu~
             else:  # Nhap thanh canh hau
-                self.board[move.endRow][move.endCol + 1] = self.board[move.endRow][
-                    move.endCol - 2]  # Copy con xe vao o ben phai vua
+                # Copy con xe vao o ben phai vua
+                self.board[move.endRow][move.endCol + 1] = self.board[move.endRow][move.endCol - 2]
                 self.board[move.endRow][move.endCol - 2] = "--"  # Xoa con xe cu~
 
         # luu lai quyen nhap thanh - chi ap dung doi voi con vua va con xe

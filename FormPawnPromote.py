@@ -1,6 +1,6 @@
 import sys
 import pygame as pg
-from config import SQ_SIZE
+from config import *
 
 # Config
 WIDTH_PROMOTE = SQ_SIZE
@@ -12,6 +12,7 @@ whitePromotes = ["wQ", "wB", "wR", "wN"]
 blackPromotes = ["bQ", "bB", "bR", "bN"]
 pg.init()
 
+temp = PIECE_NAME
 
 def loadWhitePromoteImage(IMG):
     for whitePromote in whitePromotes:
