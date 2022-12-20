@@ -2,7 +2,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 import tkinter.messagebox as messagebox
 import pymssql as MSSQLCnn
-import FormGamePlay as ChessMain
+import FormMainMenu
 
 def ClickToLogin():
     if usernameEntry.get().strip() == "" or passwordEntry.get().strip() == "":
@@ -21,8 +21,9 @@ def ClickToLogin():
             messagebox.showerror("Error", "Invalid Username or Password")
         else:
             messagebox.showinfo("Success", "Successfully Login")
-            root.destroy()
-            ChessMain.main(True, False)
+            # root.destroy()
+            FormMainMenu.onePlayer()
+            
         MSSQLdb.close()
         mySQLCursor.close()
 
@@ -30,6 +31,14 @@ def SignupPage(event):
     root.destroy()
     import FormSignUp
 
+def showInformation():
+    MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
+    mySQLCursor = MSSQLdb.cursor()
+    mySQLCursor.execute("Select username, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    mySQLResult = mySQLCursor.fetchone()
+    MSSQLdb.close()
+    mySQLCursor.close()
+    return mySQLResult
 
 root = Tk()
 root.title("SIGNIN")
@@ -70,4 +79,5 @@ signupLabel = Label(root, text='Create new one', font=('Verdana', 15, 'bold unde
 signupLabel.place(x=450, y=620)
 signupLabel.bind("<Button-1>", SignupPage)
 
-root.mainloop()
+def formSignin():
+    root.mainloop()

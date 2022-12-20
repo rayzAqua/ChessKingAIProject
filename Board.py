@@ -10,6 +10,7 @@ import pygame.font
 from config import *
 from Button import Button
 import FormMainMenu
+import FormSignIn
 
 def loadImage():  # Load tung anh
     pieces = ["bR", "bN", "bB", "bK", "bQ", "bp", "wR", "wN", "wB", "wQ", "wK", "wp"]
@@ -142,7 +143,10 @@ def drawChessRowNotation(screen, font):
 
 # Ve avatar
 def drawAvatar(screen, image):
-
+    username, level = FormSignIn.showInformation()
+    username = str(username)
+    username = username.replace("('", "")
+    username = username.replace("',)", "")
     # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
     # vị trí x = WIDTH và y = 0 lên màn hình chinh
     moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
@@ -158,8 +162,8 @@ def drawAvatar(screen, image):
     # Load font từ thư mục guiPNG vào biến font và đặt cỡ chữ là 12
     font = pygame.font.Font("guiPNG/font.ttf", 12)
     # Từ biến font tạo ra chuỗi ký tự text
-    text_name = font.render("PLAYER NAME", True, pg.Color("Black"))
-    text_level = font.render("LEVEL: EASY", True, pg.Color("Black"))
+    text_name = font.render("USERNAME: " + username, True, pg.Color("Black"))
+    text_level = font.render("LEVEL: " + str(level), True, pg.Color("Black"))
     # Tạo ra một lớp hình chữ nhật để hỗ trợ vẽ chữ
     # Toạ độ x: HEIGHT + avatar.get_width() + 30
     # Toạ độ y: 0

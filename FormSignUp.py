@@ -16,7 +16,7 @@ def ClickToSignup():
         messagebox.showerror("Error", "Password Mismatch")
     else:
         try:
-            MSSQLdb = MSSQLCnn.connect("192.168.1.9", "sa", "123", "ChessAIProject")
+            MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
             mySQLCursor = MSSQLdb.cursor()
             # mySQLCursor1 = MSSQLdb.cursor()
         except:
@@ -31,6 +31,8 @@ def ClickToSignup():
             "insert into player (fullname, username, password) values ('" + fullnameEntry.get().strip() + "', '" + usernameEntry.get().strip() + "', '" + passwordEntry.get().strip() + "');")
         MSSQLdb.commit()
         messagebox.showinfo("Success", "Successfully Register")
+        root.destroy()
+        import FormSignIn
 
         MSSQLdb.close()
         mySQLCursor.close()

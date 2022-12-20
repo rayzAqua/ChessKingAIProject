@@ -5,6 +5,7 @@ from config import *
 from Button import Button
 import FormGamePlay as ChessMain
 import FormSwapColor as kingdom
+import FormSignIn
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
@@ -58,7 +59,7 @@ def main_menu():
                              text_input="QUIT", font=get_font(30), base_color="White", hovering_color="Gray")
 
         # Draw credit text
-        credits_text = get_font(12).render("Create by group 2", True, "#b77f42")
+        credits_text = get_font(12).render("Created by group 2", True, "#b77f42")
         credits_rect = credits_text.get_rect(center=(WIDTH_MENU / 2, 730))
         SCREEN.blit(credits_text, credits_rect)
 
@@ -74,7 +75,9 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    onePlayer()
+                    # onePlayer()
+                    pygame.quit()
+                    FormSignIn.formSignin()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     twoPlayer()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
