@@ -3,6 +3,7 @@ from PIL import ImageTk, Image
 import tkinter.messagebox as messagebox
 import pymssql as MSSQLCnn
 import FormMainMenu
+import FormGamePlay
 
 def ClickToLogin():
     if usernameEntry.get().strip() == "" or passwordEntry.get().strip() == "":
@@ -21,6 +22,7 @@ def ClickToLogin():
             messagebox.showerror("Error", "Invalid Username or Password")
         else:
             messagebox.showinfo("Success", "Successfully Login")
+            print(showInformation())
             # root.destroy()
             FormMainMenu.onePlayer()
             
@@ -35,10 +37,20 @@ def showInformation():
     MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
     mySQLCursor = MSSQLdb.cursor()
     mySQLCursor.execute("Select username, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    # mySQLCursor.execute("Select username, id_level from player where username = '" + '123' + "' and password = '" + '123' + "';")
     mySQLResult = mySQLCursor.fetchone()
     MSSQLdb.close()
     mySQLCursor.close()
     return mySQLResult
+
+def updateLevel(level):
+    username, temp = showInformation()
+    MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
+    mySQLCursor = MSSQLdb.cursor()
+    mySQLCursor.execute("UPDATE player SET id_level = " + level + " where username = '" + username + "';")
+    mySQLResult = mySQLCursor.fetchone()
+    MSSQLdb.close()
+    mySQLCursor.close()
 
 root = Tk()
 root.title("SIGNIN")

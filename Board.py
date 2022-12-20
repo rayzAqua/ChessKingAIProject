@@ -143,37 +143,66 @@ def drawChessRowNotation(screen, font):
 
 # Ve avatar
 def drawAvatar(screen, image):
-    username, level = FormSignIn.showInformation()
-    username = str(username)
-    username = username.replace("('", "")
-    username = username.replace("',)", "")
-    # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
-    # vị trí x = WIDTH và y = 0 lên màn hình chinh
-    moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
-    pg.draw.rect(screen, pg.Color("#666666"), moveLogRect) # Vẽ nó lên màn hình
+    try:
+        username, level = FormSignIn.showInformation()
+        username = str(username)
+        username = username.replace("('", "")
+        username = username.replace("',)", "")
+        # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
+        # vị trí x = WIDTH và y = 0 lên màn hình chinh
+        moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
+        pg.draw.rect(screen, pg.Color("#666666"), moveLogRect) # Vẽ nó lên màn hình
 
-    # Load ảnh từ thư mục vào biến avatar
-    avatar = pg.image.load("guiPNG/avatarDemo.jpg")
-    # Định dạng lại kích cỡ avatar
-    avatar = pg.transform.scale(avatar, (64, 64))
-    # Vẽ avatar lên hình chữ nhật vừa tạo phía trên và avatar đc vẽ tại vị trí
-    # (avatar.get_width()/2-4, HEIGHT_BUTTON/2-avatar.get_height()/2)
-    screen.blit(avatar, moveLogRect.move(avatar.get_width()/2-14, HEIGHT_BUTTON/2-avatar.get_height()/2))
-    # Load font từ thư mục guiPNG vào biến font và đặt cỡ chữ là 12
-    font = pygame.font.Font("guiPNG/font.ttf", 12)
-    # Từ biến font tạo ra chuỗi ký tự text
-    text_name = font.render("USERNAME: " + username, True, pg.Color("Black"))
-    text_level = font.render("LEVEL: " + str(level), True, pg.Color("Black"))
-    # Tạo ra một lớp hình chữ nhật để hỗ trợ vẽ chữ
-    # Toạ độ x: HEIGHT + avatar.get_width() + 30
-    # Toạ độ y: 0
-    # Chiều rộng: MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54
-    # Chiều cao: HEIGHT_BUTTON
-    text_rect = pg.Rect(HEIGHT + avatar.get_width() + 30, 0,
-                        (MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54), HEIGHT_BUTTON)
-    # Vẽ chữ lên lớp hình text_rect và dịch chuyển lớp hình vừa vẽ xuống trung tâm
-    screen.blit(text_name, text_rect.move(0, HEIGHT_BUTTON/3))
-    screen.blit(text_level, text_rect.move(0, HEIGHT_BUTTON/2 + 10))
+        # Load ảnh từ thư mục vào biến avatar
+        avatar = pg.image.load("guiPNG/avatarDemo.jpg")
+        # Định dạng lại kích cỡ avatar
+        avatar = pg.transform.scale(avatar, (64, 64))
+        # Vẽ avatar lên hình chữ nhật vừa tạo phía trên và avatar đc vẽ tại vị trí
+        # (avatar.get_width()/2-4, HEIGHT_BUTTON/2-avatar.get_height()/2)
+        screen.blit(avatar, moveLogRect.move(avatar.get_width()/2-14, HEIGHT_BUTTON/2-avatar.get_height()/2))
+        # Load font từ thư mục guiPNG vào biến font và đặt cỡ chữ là 12
+        font = pygame.font.Font("guiPNG/font.ttf", 12)
+        # Từ biến font tạo ra chuỗi ký tự text
+        text_name = font.render("USERNAME: " + username, True, pg.Color("Black"))
+        text_level = font.render("LEVEL: " + str(level), True, pg.Color("Black"))
+        # Tạo ra một lớp hình chữ nhật để hỗ trợ vẽ chữ
+        # Toạ độ x: HEIGHT + avatar.get_width() + 30
+        # Toạ độ y: 0
+        # Chiều rộng: MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54
+        # Chiều cao: HEIGHT_BUTTON
+        text_rect = pg.Rect(HEIGHT + avatar.get_width() + 30, 0,
+                            (MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54), HEIGHT_BUTTON)
+        # Vẽ chữ lên lớp hình text_rect và dịch chuyển lớp hình vừa vẽ xuống trung tâm
+        screen.blit(text_name, text_rect.move(0, HEIGHT_BUTTON/3))
+        screen.blit(text_level, text_rect.move(0, HEIGHT_BUTTON/2 + 10))
+    except:
+        # Vẽ một hình chữ nhật có kích thước MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON bắt đầu từ
+        # vị trí x = WIDTH và y = 0 lên màn hình chinh
+        moveLogRect = pg.Rect(WIDTH, 0, MOVE_LOG_PANEL_WIDTH, HEIGHT_BUTTON) # Tạo một hình chữ nhật
+        pg.draw.rect(screen, pg.Color("#666666"), moveLogRect) # Vẽ nó lên màn hình
+
+        # Load ảnh từ thư mục vào biến avatar
+        avatar = pg.image.load("guiPNG/avatarDemo.jpg")
+        # Định dạng lại kích cỡ avatar
+        avatar = pg.transform.scale(avatar, (64, 64))
+        # Vẽ avatar lên hình chữ nhật vừa tạo phía trên và avatar đc vẽ tại vị trí
+        # (avatar.get_width()/2-4, HEIGHT_BUTTON/2-avatar.get_height()/2)
+        screen.blit(avatar, moveLogRect.move(avatar.get_width()/2-14, HEIGHT_BUTTON/2-avatar.get_height()/2))
+        # Load font từ thư mục guiPNG vào biến font và đặt cỡ chữ là 12
+        font = pygame.font.Font("guiPNG/font.ttf", 12)
+        # Từ biến font tạo ra chuỗi ký tự text
+        text_name = font.render("USERNAME: ", True, pg.Color("Black"))
+        text_level = font.render("LEVEL: ", True, pg.Color("Black"))
+        # Tạo ra một lớp hình chữ nhật để hỗ trợ vẽ chữ
+        # Toạ độ x: HEIGHT + avatar.get_width() + 30
+        # Toạ độ y: 0
+        # Chiều rộng: MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54
+        # Chiều cao: HEIGHT_BUTTON
+        text_rect = pg.Rect(HEIGHT + avatar.get_width() + 30, 0,
+                            (MOVE_LOG_PANEL_WIDTH - avatar.get_width()/2-54), HEIGHT_BUTTON)
+        # Vẽ chữ lên lớp hình text_rect và dịch chuyển lớp hình vừa vẽ xuống trung tâm
+        screen.blit(text_name, text_rect.move(0, HEIGHT_BUTTON/3))
+        screen.blit(text_level, text_rect.move(0, HEIGHT_BUTTON/2 + 10))
 
 
 def drawMoveLog(screen, gs):

@@ -1,8 +1,14 @@
 import random
+import FormSignIn
 
 """
 Nguyen lieu diem so cua tung quan co, nguyen lieu nay dung de tinh toan ra bang diem vi tri
 """
+try:
+    temp, level = FormSignIn.showInformation()
+except:
+    level = 0
+
 # Diem so vo tri cua tung quan co - Nguyen lieu
 pieceScores = {"K": 0, "Q": 10, "R": 5, "B": 3, "N": 3, "p": 1}
 
@@ -11,7 +17,9 @@ CHECKMATE = 1000
 # Chieu bi la khi di duong nao` cung bi doi thu de doa, cho nen chieu bi se = 0, = 0 tot hon la thuc hien nuoc di
 # voi rui ro la bi an mat nuoc do
 STALEMATE = 0
-DEPTH = 3
+# DEPTH = level
+DEPTH = level
+print(DEPTH)
 # Tao ra mot so nguyen i ngau nhien va truyen no vao list validMoves, sau do tra ve validMove[i]
 def findRandomMoves(validMoves):
     return validMoves[random.randint(0, len(validMoves) - 1)]
