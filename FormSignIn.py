@@ -11,7 +11,7 @@ def ClickToLogin():
     else:
         #MSSQL Server ConnectingString
         try:
-            MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
+            MSSQLdb = MSSQLCnn.connect("192.168.1.9", "sa", "123456", "ChessAIProject")
             mySQLCursor = MSSQLdb.cursor()
         except:
             messagebox.showerror('Error', 'Database Connectivity Issue, Please Try Again')
@@ -34,7 +34,7 @@ def SignupPage(event):
     import FormSignUp
 
 def showInformation():
-    MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
+    MSSQLdb = MSSQLCnn.connect("192.168.1.9", "sa", "123456", "ChessAIProject")
     mySQLCursor = MSSQLdb.cursor()
     mySQLCursor.execute("Select username, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
     # mySQLCursor.execute("Select username, id_level from player where username = '" + '123' + "' and password = '" + '123' + "';")
@@ -45,7 +45,7 @@ def showInformation():
 
 def updateLevel(level):
     username, temp = showInformation()
-    MSSQLdb = MSSQLCnn.connect("192.168.1.30", "sa", "123", "ChessAIProject")
+    MSSQLdb = MSSQLCnn.connect("192.168.1.9", "sa", "123456", "ChessAIProject")
     mySQLCursor = MSSQLdb.cursor()
     mySQLCursor.execute("UPDATE player SET id_level = " + level + " where username = '" + username + "';")
     mySQLResult = mySQLCursor.fetchone()

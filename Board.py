@@ -70,11 +70,19 @@ def drawText(screen, text, color1, color2, gameOver):
     screen.blit(textObject, textLocation)
     textObject = font.render(text, True, pg.Color(color2))
     screen.blit(textObject, textLocation.move(1, 1))
+    # Ve button OK
+    button_ok = pg.Surface((WIDTH/3-25, HEIGHT/7))
+    button_ok.fill("Gray20")
+    button_ok.set_alpha(200)
+    screen.blit(button_ok, (WIDTH/3 + 15, HEIGHT/2 + 60))
+    # Ve chu len button OK
+    text_ok = font.render("OK", True, pg.Color("White"))
+    screen.blit(text_ok, textLocation.move(WIDTH/2-text_ok.get_width()/2-310, HEIGHT/3-30))
 
     while gameOver:
         mouse_endgame_pos = pg.mouse.get_pos()
-        col = mouse_endgame_pos[0] // SQ_SIZE
-        row = mouse_endgame_pos[1] // SQ_SIZE
+        col = mouse_endgame_pos[0] // WIDTH_BUTTON
+        row = mouse_endgame_pos[1] // HEIGHT_BUTTON
 
         for e in pg.event.get():
             if e.type == pg.QUIT:
@@ -89,6 +97,8 @@ def drawText(screen, text, color1, color2, gameOver):
                     return "reset"
                 elif (r, c) == (7, 8):
                     return "back"
+                elif row in range(4, 6) and col in range(2, 4):
+                    return "reset"
         pg.display.update()
 
 
