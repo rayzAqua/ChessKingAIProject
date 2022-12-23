@@ -9,5 +9,5 @@ Cách chạy chương trình:
 3. Thay đổi cấu hình trong file config.py để phù hợp với máy của bạn.
 4. Chạy file FormMainMenu.py.
 
-Chú ý: Thay đổi IP máy bạn trong hai file FormSignUp, FormSignIn.
+Chú ý: Thay đổi IP trong hai file FormSignUp, FormSignIn theo IP của bạn.
 Chúc bạn thành công ^^ !
