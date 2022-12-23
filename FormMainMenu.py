@@ -11,6 +11,7 @@ import FormSignIn
 def get_font(size):  # Returns Press-Start-2P in the desired size
     return pygame.font.Font("guiPNG/font.ttf", size)
 
+
 def onePlayer():
     pygame.display.set_caption("Chess King")
     pygame.display.set_icon(pygame.image.load("guiPNG/chessIcon.png"))
@@ -30,6 +31,7 @@ def twoPlayer():
 
     ChessMain.main(True, True)
     # main.mainloop()
+
 
 def main_menu():
     pygame.init()
@@ -59,7 +61,8 @@ def main_menu():
                              text_input="QUIT", font=get_font(30), base_color="White", hovering_color="Gray")
 
         # Draw credit text
-        credits_text = get_font(12).render("Created by group 2", True, "#b77f42")
+        credits_text = get_font(12).render(
+            "Created by group 2", True, "#b77f42")
         credits_rect = credits_text.get_rect(center=(WIDTH_MENU / 2, 730))
         SCREEN.blit(credits_text, credits_rect)
 
