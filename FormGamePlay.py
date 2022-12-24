@@ -63,7 +63,7 @@ def main(player_one, player_two):
                     # Kiem tra xem co phai player bam 2 lan cung 1 o giong nhau ko
                     if sqSelected == (row, col) or row >= 8 or col >= 8:
                         sqSelected = ()  # Reset
-                        playerClick = []  # Reset]
+                        playerClick = []  # Reset
                     else:
                         sqSelected = (row, col)
                         playerClick.append(sqSelected)  # Luu lai 2 toa do 2 o vuong da click
@@ -86,6 +86,8 @@ def main(player_one, player_two):
                             # Bat loi khi nguoi choi da chon 1 con co va sau do con 1 con co khac
                             # khi ng choi lam hanh dong nay thi toa do con list playerClick se la lam chon cuoi cung
                             playerClick = [sqSelected]
+                    if not humanTurn:
+                        playerClick = []
                     # Bat su kien cac nut khi dung chuot
                     if location[0]//WIDTH_BUTTON in range(6, 9) and location[1]//HEIGHT_BUTTON == 7:
                         col_btn = location[0]//WIDTH_BUTTON
@@ -180,11 +182,11 @@ def main(player_one, player_two):
             gameOver = True
             if gs.whiteToMove:
                 case = Board.drawText(screen, "Black Win", "Gray", "Black", gameOver)
-                # FormSignIn.updateLevel()
+                FormSignIn.updateLevel()
                 # return 1
             else:
                 case = Board.drawText(screen, "White Win", "Gray", "White", gameOver)
-                # FormSignIn.updateLevel()
+                FormSignIn.updateLevel()
                 # return 2
             if case == "undo":
                 gs.undoMove()
@@ -233,24 +235,24 @@ def main(player_one, player_two):
         clock.tick(MAX_FPS)  # 1 giay co max_fps khung hinh
         pg.display.flip()
 
-# def Level():
-#     temp, level = FormSignIn.showInformation()
-#     if level < 3:
-#         if main(True, False) == 1:
-#             level += 1
-#         elif main(True, False) == 2:
-#             level -= 1
-#         elif main(False, True) == 1:
-#             level -= 1
-#         elif main(False, True) == 2:
-#             level += 1
-#     else:
-#         if main(True, False) == 1:
-#             pass
-#         elif main(True, False) == 2:
-#             level -= 1
-#         elif main(False, True) == 1:
-#             level -= 1
-#         elif main(False, True) == 2:
-#             pass
-#     return level
+def Level():
+    temp, level = FormSignIn.showInformation()
+    if level < 3:
+        if main(True, False) == 1:
+            level += 1
+        elif main(True, False) == 2:
+            level -= 1
+        elif main(False, True) == 1:
+            level -= 1
+        elif main(False, True) == 2:
+            level += 1
+    else:
+        if main(True, False) == 1:
+            pass
+        elif main(True, False) == 2:
+            level -= 1
+        elif main(False, True) == 1:
+            level -= 1
+        elif main(False, True) == 2:
+            pass
+    return level

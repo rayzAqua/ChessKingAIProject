@@ -61,8 +61,7 @@ def main_menu():
                              text_input="QUIT", font=get_font(30), base_color="White", hovering_color="Gray")
 
         # Draw credit text
-        credits_text = get_font(12).render(
-            "Created by group 2", True, "#b77f42")
+        credits_text = get_font(12).render("Created by group 2", True, "#b77f42")
         credits_rect = credits_text.get_rect(center=(WIDTH_MENU / 2, 730))
         SCREEN.blit(credits_text, credits_rect)
 
@@ -86,6 +85,8 @@ def main_menu():
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
+            elif event.type == pygame.MOUSEWHEEL:
+                pass
 
         pygame.display.update()
 
