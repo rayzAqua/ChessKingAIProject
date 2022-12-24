@@ -3,25 +3,21 @@ from PIL import ImageTk, Image
 import tkinter.messagebox as messagebox
 import pymssql as MSSQLCnn
 import FormMainMenu
+from config import IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME
 import FormGamePlay
-import config
-
 
 def ClickToLogin():
     if usernameEntry.get().strip() == "" or passwordEntry.get().strip() == "":
         messagebox.showerror("Error", "All Fields Are Required")
     else:
-        # MSSQL Server ConnectingString
+        #MSSQL Server ConnectingString
         try:
-            MSSQLdb = MSSQLCnn.connect(
-                f"{config.IP}", f"{config.MSSQL_LOGIN}", f"{config.MSSQL_PASSWORD}", f"{config.DB_NAME}")
+            MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
             mySQLCursor = MSSQLdb.cursor()
         except:
-            messagebox.showerror(
-                'Error', 'Database Connectivity Issue, Please Try Again')
+            messagebox.showerror('Error', 'Database Connectivity Issue, Please Try Again')
             return
-        mySQLCursor.execute("Select * from player where username = '" + usernameEntry.get(
-        ).strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+        mySQLCursor.execute("Select * from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
         mySQLResult = mySQLCursor.fetchone()
         if mySQLResult == None:
             messagebox.showerror("Error", "Invalid Username or Password")
@@ -30,40 +26,32 @@ def ClickToLogin():
             print(showInformation())
             # root.destroy()
             FormMainMenu.onePlayer()
-
+            
         MSSQLdb.close()
         mySQLCursor.close()
-
 
 def SignupPage(event):
     root.destroy()
     import FormSignUp
 
-
 def showInformation():
-    MSSQLdb = MSSQLCnn.connect(
-        f"{config.IP}", f"{config.MSSQL_LOGIN}", f"{config.MSSQL_PASSWORD}", f"{config.DB_NAME}")
+    MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
-    mySQLCursor.execute("Select username, id_level from player where username = '" +
-                        usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    mySQLCursor.execute("Select username, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
     # mySQLCursor.execute("Select username, id_level from player where username = '" + '123' + "' and password = '" + '123' + "';")
     mySQLResult = mySQLCursor.fetchone()
     MSSQLdb.close()
     mySQLCursor.close()
     return mySQLResult
 
-
 def updateLevel(level):
     username, temp = showInformation()
-    MSSQLdb = MSSQLCnn.connect(
-        f"{config.IP}", f"{config.MSSQL_LOGIN}", f"{config.MSSQL_PASSWORD}", f"{config.DB_NAME}")
+    MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
-    mySQLCursor.execute("UPDATE player SET id_level = " +
-                        level + " where username = '" + username + "';")
+    mySQLCursor.execute("UPDATE player SET id_level = " + level + " where username = '" + username + "';")
     mySQLResult = mySQLCursor.fetchone()
     MSSQLdb.close()
     mySQLCursor.close()
-
 
 root = Tk()
 root.title("SIGNIN")
@@ -83,35 +71,26 @@ bgImage = ImageTk.PhotoImage(file="guiPNG/bgpxl.png")
 bgLabel = Label(root, image=bgImage)
 bgLabel.grid()
 
-heading = Label(root, text='USER LOGIN', font=(
-    'Verdana', 30, 'bold'), bg='#D9E6F9', fg='firebrick1').place(x=250, y=100)
+heading = Label(root, text='USER LOGIN', font=('Verdana', 30, 'bold'), bg= '#D9E6F9', fg='firebrick1').place(x=250, y=100)
 
-usernameLabel = Label(root, text='Username', font=(
-    'Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=100, y=250)
-usernameEntry = Entry(root, width=22, font=(
-    'Verdana', 20), bg='white', fg='firebrick1')
+usernameLabel = Label(root, text='Username', font=('Verdana', 20), bg= '#D9E6F9', fg='firebrick1').place(x=100, y=250)
+usernameEntry = Entry(root, width=22, font=('Verdana', 20), bg='white', fg='firebrick1')
 usernameEntry.place(x=300, y=250)
 
-passwordLabel = Label(root, text='Password', font=(
-    'Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=100, y=330)
-passwordEntry = Entry(root, width=22, font=('Verdana', 20),
-                      bg='white', fg='firebrick1', show='*')
+passwordLabel = Label(root, text='Password', font=('Verdana', 20), bg= '#D9E6F9', fg='firebrick1').place(x=100, y=330)
+passwordEntry = Entry(root, width=22, font=('Verdana', 20), bg='white', fg='firebrick1', show='*')
 passwordEntry.place(x=300, y=330)
 
-signinButton = Button(root, text='SIGNIN', font=('Verdana', 30, 'bold'),
-                      bd=0, fg='white', bg='firebrick1', cursor='hand2', command=ClickToLogin)
+signinButton = Button(root, text='SIGNIN', font=('Verdana', 30, 'bold'), bd=0, fg='white', bg='firebrick1', cursor='hand2', command=ClickToLogin)
 signinButton.place(x=300, y=480)
 
-noAccountLabel = Label(root, text='Don\'t have an account?', font=(
-    'Verdana', 15), bg='#D7F0FF', fg='firebrick1')
-noAccountLabel.place(x=150, y=620)
+noaccountLabel = Label(root, text='Don\'t have an account?', font=('Verdana', 15), bg= '#D7F0FF', fg='firebrick1')
+noaccountLabel.place(x=150, y=620)
 
 
-signupLabel = Label(root, text='Create new one', font=(
-    'Verdana', 15, 'bold underline'), bg='#D7F0FF', fg='firebrick1', cursor='hand2')
+signupLabel = Label(root, text='Create new one', font=('Verdana', 15, 'bold underline'), bg= '#D7F0FF', fg='firebrick1', cursor='hand2')
 signupLabel.place(x=450, y=620)
 signupLabel.bind("<Button-1>", SignupPage)
-
 
 def formSignin():
     root.mainloop()

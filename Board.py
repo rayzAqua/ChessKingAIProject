@@ -226,7 +226,7 @@ def drawMoveLog(screen, gs):
             moveString += str(moveLog[i+1]) + "   "
         moveTexts.append(moveString)
 
-    movesPerRow = 4
+    movesPerRow = 3
     padding = 5
     lineSpacing = 2
     textY = padding
@@ -236,7 +236,7 @@ def drawMoveLog(screen, gs):
         for j in range(movesPerRow):
             if i+j < len(moveTexts):
                 text += moveTexts[i+j]
-        textObject = font.render(text, True, pg.Color('black'))
+        textObject = font.render(text, True, pg.Color('Gray'))
         textLocation = moveLogRect.move(padding, textY)
         screen.blit(textObject, textLocation)
         textY += textObject.get_height() + lineSpacing

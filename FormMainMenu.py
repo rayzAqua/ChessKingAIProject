@@ -78,9 +78,9 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    # onePlayer()
-                    pygame.quit()
-                    FormSignIn.formSignin()
+                    onePlayer()
+                    # pygame.quit()
+                    # FormSignIn.formSignin()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     twoPlayer()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):

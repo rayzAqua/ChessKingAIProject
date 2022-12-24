@@ -2,8 +2,7 @@ from tkinter import *
 import tkinter.messagebox as messagebox
 from PIL import ImageTk
 import pymssql as MSSQLCnn
-import config
-
+from config import IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME
 
 def SigninPage(event):
     root.destroy()
@@ -17,22 +16,19 @@ def ClickToSignup():
         messagebox.showerror("Error", "Password Mismatch")
     else:
         try:
-            MSSQLdb = MSSQLCnn.connect(
-                f"{config.IP}", f"{config.MSSQL_LOGIN}", f"{config.MSSQL_PASSWORD}", f"{config.DB_NAME}")
+            MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
             mySQLCursor = MSSQLdb.cursor()
             # mySQLCursor1 = MSSQLdb.cursor()
         except:
-            messagebox.showerror(
-                'Error', 'Database Connectivity Issue, Please Try Again')
+            messagebox.showerror('Error', 'Database Connectivity Issue, Please Try Again')
             return
-        mySQLCursor.execute(
-            "Select * from player where username = '" + usernameEntry.get().strip() + "';")
+        mySQLCursor.execute("Select * from player where username = '" + usernameEntry.get().strip() + "';")
         user = mySQLCursor.fetchone()
         if user is not None:
             messagebox.showerror("Error", "Username already exists")
             return
         mySQLCursor.execute(
-            "insert into player (fullname, username, password, id_level) values ('" + fullnameEntry.get().strip() + "', '" + usernameEntry.get().strip() + "', '" + passwordEntry.get().strip() + "',0);")
+            "insert into player (fullname, username, password) values ('" + fullnameEntry.get().strip() + "', '" + usernameEntry.get().strip() + "', '" + passwordEntry.get().strip() + "');")
         MSSQLdb.commit()
         messagebox.showinfo("Success", "Successfully Register")
         root.destroy()
@@ -60,39 +56,29 @@ bgImage = ImageTk.PhotoImage(file="guiPNG/bgpxl.png")
 bgLabel = Label(root, image=bgImage)
 bgLabel.grid()
 
-heading = Label(root, text='CREATE AN ACCOUNT', font=(
-    'Verdana', 30, 'bold'), bg='#D9E6F9', fg='firebrick1').place(x=150, y=50)
+heading = Label(root, text='CREATE AN ACCOUNT', font=('Verdana', 30, 'bold'), bg='#D9E6F9', fg='firebrick1').place(x=150, y=50)
 
-fullnameLabel = Label(root, text='Fullname', font=(
-    'Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=150)
-fullnameEntry = Entry(root, width=22, font=(
-    'Verdana', 20), bg='white', fg='firebrick1')
+fullnameLabel = Label(root, text='Fullname', font=('Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=150)
+fullnameEntry = Entry(root, width=22, font=('Verdana', 20), bg='white', fg='firebrick1')
 fullnameEntry.place(x=330, y=150)
 
-usernameLabel = Label(root, text='Username', font=(
-    'Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=230)
-usernameEntry = Entry(root, width=22, font=(
-    'Verdana', 20), bg='white', fg='firebrick1')
+usernameLabel = Label(root, text='Username', font=('Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=230)
+usernameEntry = Entry(root, width=22, font=('Verdana', 20), bg='white', fg='firebrick1')
 usernameEntry.place(x=330, y=230)
 
-passwordLabel = Label(root, text='Password', font=(
-    'Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=310)
-passwordEntry = Entry(root, width=22, font=('Verdana', 20),
-                      bg='white', fg='firebrick1', show='*')
+passwordLabel = Label(root, text='Password', font=('Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=310)
+passwordEntry = Entry(root, width=22, font=('Verdana', 20), bg='white', fg='firebrick1', show='*')
 passwordEntry.place(x=330, y=310)
 
-confirmLabel = Label(root, text='Confirm Password', font=(
-    'Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=390)
-confirmEntry = Entry(root, width=22, font=('Verdana', 20),
-                     bg='white', fg='firebrick1', show='*')
+confirmLabel = Label(root, text='Confirm Password', font=('Verdana', 20), bg='#D9E6F9', fg='firebrick1').place(x=45, y=390)
+confirmEntry = Entry(root, width=22, font=('Verdana', 20), bg='white', fg='firebrick1', show='*')
 confirmEntry.place(x=330, y=390)
 
 signupButton = Button(root, text='SIGNUP', font=('Verdana', 30, 'bold'), bd=0, fg='white', bg='firebrick1',
                       cursor='hand2', command=ClickToSignup)
 signupButton.place(x=300, y=480)
 
-alreadyaccountLabel = Label(root, text='Already have an account?', font=(
-    'Verdana', 15), bg='#D7F0FF', fg='firebrick1').place(x=250, y=620)
+alreadyaccountLabel = Label(root, text='Already have an account?', font=('Verdana', 15), bg='#D7F0FF', fg='firebrick1').place(x=250, y=620)
 
 loginLabel = Label(root, text='Login', font=('Verdana', 15, 'bold underline'), bg='#D7F0FF', fg='firebrick1',
                    cursor='hand2')

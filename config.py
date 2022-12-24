@@ -29,7 +29,7 @@ MAX_FPS = 15
 # Một thư viện ảnh dùng lưu trữ ảnh của từng quân cờ
 IMAGES = {}
 # CONNECT DATABASE
-IP = '192.168.1.44'
+IP = '172.20.10.3'
 MSSQL_LOGIN = 'sa'
-MSSQL_PASSWORD = '519216'
+MSSQL_PASSWORD = '123456'
 DB_NAME = 'ChessAIProject'

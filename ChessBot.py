@@ -7,10 +7,30 @@ Nguyen lieu diem so cua tung quan co, nguyen lieu nay dung de tinh toan ra bang 
 try:
     temp, level = FormSignIn.showInformation()
 except:
-    level = 0
+    level = 2
 
-# Diem so vo tri cua tung quan co - Nguyen lieu
+# Diem so cua tung quan co - Nguyen lieu
 pieceScores = {"K": 0, "Q": 10, "R": 5, "B": 3, "N": 3, "p": 1}
+
+blackPawnScores = [[0, 0, 0, 0, 0, 0, 0, 0],
+                   [1, 1, 1, 0, 0, 1, 1, 1],
+                   [1, 1, 2, 3, 3, 2, 1, 1],
+                   [1, 2, 2, 4, 4, 2, 2, 1],
+                   [2, 3, 3, 5, 5, 3, 3, 2],
+                   [5, 6, 6, 7, 7, 6, 6, 5],
+                   [8, 8, 8, 8, 8, 8, 8, 8],
+                   [8, 8, 8, 8, 8, 8, 8, 8]]
+
+whitePawnScores = [[8, 8, 8, 8, 8, 8, 8, 8],
+                   [8, 8, 8, 8, 8, 8, 8, 8],
+                   [5, 6, 6, 7, 7, 6, 6, 5],
+                   [2, 3, 3, 5, 5, 3, 3, 2],
+                   [1, 2, 2, 4, 4, 2, 2, 1],
+                   [1, 1, 2, 3, 3, 2, 1, 1],
+                   [1, 1, 1, 0, 0, 1, 1, 1],
+                   [0, 0, 0, 0, 0, 0, 0, 0]]
+
+chessPossitonsDict = {"wp": whitePawnScores, "bp": blackPawnScores}
 
 # Neu chieu tuong thi diem vi tri la cao nhat
 CHECKMATE = 1000
@@ -18,8 +38,8 @@ CHECKMATE = 1000
 # voi rui ro la bi an mat nuoc do
 STALEMATE = 0
 # DEPTH = level
-DEPTH = level
-print(DEPTH)
+DEPTH = 3
+# print(DEPTH)
 # Tao ra mot so nguyen i ngau nhien va truyen no vao list validMoves, sau do tra ve validMove[i]
 def findRandomMoves(validMoves):
     return validMoves[random.randint(0, len(validMoves) - 1)]
@@ -88,10 +108,11 @@ def findBestMove(gs, validMoves, returnQueue):
     global botBestMove, counter
     counter = 0
     botBestMove = None
+    # Lam xao tron danh sach validMove
     random.shuffle(validMoves)
     # findMoveMinMaxAlphaBeta(gs, validMoves, DEPTH, -CHECKMATE, CHECKMATE, gs.whiteToMove)
     findMoveNegaMaxAlphaBeta(gs, validMoves, DEPTH, -CHECKMATE, CHECKMATE, 1 if gs.whiteToMove else -1)
-    print("So lan de quy: " + str(counter))
+    # print("So lan de quy: " + str(counter))
     returnQueue.put(botBestMove)
 
 # Giai thuat MinMax: Giai thuat luon tim cach lam max diem so nuoc di cua minh sao cho no la lon nhat
@@ -200,11 +221,19 @@ def scoreBoard(gs):
         return STALEMATE
 
     score = 0
-    for row in gs.board:
-        for square in row:
-            if square[0] == "w":  # Quan trang thi gia tri duong
-                score += pieceScores[square[1]]
-            elif square[0] == "b":  # Quan den thi gia tri am
-                score -= pieceScores[square[1]]
+    for row in range(len(gs.board)):
+        for col in range(len(gs.board[row])):
+            square = gs.board[row][col]
+            if square != "--":
+                piecePositionScore = 0
+                if square == "wp":
+                    piecePositionScore = chessPossitonsDict["wp"][row][col]
+                elif square == "bp":
+                    piecePositionScore = chessPossitonsDict["bp"][row][col]
+
+                if square[0] == "w":  # Quan trang thi gia tri duong
+                    score += pieceScores[square[1]] + piecePositionScore
+                elif square[0] == "b":  # Quan den thi gia tri am
+                    score -= pieceScores[square[1]] + piecePositionScore
 
     return score
