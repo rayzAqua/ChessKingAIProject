@@ -3,8 +3,9 @@ from PIL import ImageTk, Image
 import tkinter.messagebox as messagebox
 import pymssql as MSSQLCnn
 import FormMainMenu
-from config import IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME
+from config import IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME, LEVEL
 import FormGamePlay
+
 
 def ClickToLogin():
     if usernameEntry.get().strip() == "" or passwordEntry.get().strip() == "":
@@ -23,10 +24,15 @@ def ClickToLogin():
             messagebox.showerror("Error", "Invalid Username or Password")
         else:
             messagebox.showinfo("Success", "Successfully Login")
-            print(showInformation())
+            # print(showInformation())
             # root.destroy()
-            FormMainMenu.onePlayer()
-            
+            level = showLevel()
+            res = ""
+            for i in level:
+                res += str(i)
+            level = int(res)
+            FormMainMenu.onePlayer(level)
+
         MSSQLdb.close()
         mySQLCursor.close()
 
@@ -57,11 +63,14 @@ def updateLevel():
 def showLevel():
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
-    mySQLCursor.execute("Select id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
-    mySQLResult = mySQLCursor.fetchone()
+    # mySQLCursor.execute("SELECT id_level FROM dbo.player WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    mySQLCursor.execute("SELECT level_name FROM dbo.player as p, dbo.level as l WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "' and p.id_level = l.id_level;")
+    mySQLResult1 = mySQLCursor.fetchone()
+    print(mySQLResult1)
     MSSQLdb.close()
     mySQLCursor.close()
-    return mySQLResult
+    # print(usernameEntry.get())
+    return mySQLResult1
     
 root = Tk()
 root.title("SIGNIN")
@@ -101,6 +110,9 @@ noaccountLabel.place(x=150, y=620)
 signupLabel = Label(root, text='Create new one', font=('Verdana', 15, 'bold underline'), bg= '#D7F0FF', fg='firebrick1', cursor='hand2')
 signupLabel.place(x=450, y=620)
 signupLabel.bind("<Button-1>", SignupPage)
+
+def exit():
+    root.quit()
 
 def formSignin():
     root.mainloop()

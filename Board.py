@@ -1,6 +1,7 @@
 '''
 Ve ban co
 '''
+import time
 
 import pygame as pg
 import sys
@@ -78,6 +79,7 @@ def drawText(screen, text, color1, color2, gameOver):
     # Ve chu len button OK
     text_ok = font.render("OK", True, pg.Color("White"))
     screen.blit(text_ok, textLocation.move(WIDTH/2-text_ok.get_width()/2-310, HEIGHT/3-30))
+    BUTTON_OK = pg.mixer.Sound("music/button_effect.mp3")
 
     while gameOver:
         mouse_endgame_pos = pg.mouse.get_pos()
@@ -91,13 +93,18 @@ def drawText(screen, text, color1, color2, gameOver):
             elif e.type == pg.MOUSEBUTTONDOWN:
                 c = mouse_endgame_pos[0] // WIDTH_BUTTON
                 r = mouse_endgame_pos[1] // HEIGHT_BUTTON
+                BUTTON_OK.play()
                 if (r, c) == (7, 6):
+                    time.sleep(0.4)
                     return "undo"
                 elif (r, c) == (7, 7):
+                    time.sleep(0.4)
                     return "reset"
                 elif (r, c) == (7, 8):
+                    time.sleep(0.4)
                     return "back"
                 elif row in range(4, 6) and col in range(2, 4):
+                    time.sleep(0.4)
                     return "reset"
         pg.display.update()
 
@@ -258,3 +265,13 @@ def drawMoveButton(screen):
     screen.blit(home, moveLogRect.move((home.get_width() + (home.get_width()/2-8)*10), HEIGHT_BUTTON/2-home.get_height()/2))
 
     # pg.display.update()
+
+def drawCheckWarning(screen, kingLocation, alpha):
+    row_king = kingLocation[0]
+    col_king = kingLocation[1]
+
+    s_warning = pg.Surface((SQ_SIZE, SQ_SIZE))
+    s_warning.fill("Red")
+    s_warning.set_alpha(alpha)
+    screen.blit(s_warning, (SQ_SIZE*col_king, SQ_SIZE*row_king))
+

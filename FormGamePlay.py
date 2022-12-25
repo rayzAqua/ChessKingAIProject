@@ -2,6 +2,7 @@
 Day la File dieu khien chinh cua chuong trinh, no chiu trach nhiem cho viec dieu khien du lieu vao cua
 nguoi dung và hien thi trang thai tro choi
 """
+import time
 
 import pygame as pg
 import sys
@@ -21,7 +22,7 @@ Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nha
 '''
 
 
-def main(player_one, player_two):
+def main(player_one, player_two, level):
     pg.init()
     pg.display.set_icon(pg.image.load("guiPNG/chessIcon.png"))
     pg.display.set_caption("Chess King")
@@ -31,7 +32,12 @@ def main(player_one, player_two):
     clock = pg.time.Clock()
     Board.loadImage()
 
-    moveLogFont = pg.font.SysFont("Arial", 12, False, False)
+    # Sound effect
+    MOVE_SFX = pg.mixer.Sound("music/move_effect.mp3")
+    CAPTURED_SFX = pg.mixer.Sound("music/captured_effect.mp3")
+    CHECK_SFX = pg.mixer.Sound("music/check_effect.mp3")
+    BUTTON_SFX = pg.mixer.Sound("music/button_effect.mp3")
+
     # Lay nuoc di hop le - lay mot lan truoc khi vao vong lap
     validMoves = gs.getValidMove()
     moveMake = False  # Neu tao nuoc di roi thi False
@@ -47,6 +53,10 @@ def main(player_one, player_two):
     aiThingking = False
     moveFinderProcess = None
     moveUndo = False
+
+    # So lan ve canh bao chieu tuong
+    draw_times = 3
+    count_draw_times = 0
 
     # Vong lap game
     running = True
@@ -78,9 +88,16 @@ def main(player_one, player_two):
                                     pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow, gs.whiteToMove)
                                     if pieceName != "":
                                         gs.makeMove(validMoves[i], pieceName=pieceName)
+                                        MOVE_SFX.play()
                                 else:
                                     # print("Player: " + move.getChessNotation())
                                     gs.makeMove(validMoves[i])
+                                    if validMoves[i].isCapture or validMoves[i].isEnpassant:
+                                        CAPTURED_SFX.play()
+                                    # elif gs.inCheck():
+                                    #     CHECK_SFX.play()
+                                    else:
+                                        MOVE_SFX.play()
                                 moveMake = True
                                 moveUndo = False
                                 sqSelected = ()  # Reset
@@ -92,10 +109,12 @@ def main(player_one, player_two):
                     if not humanTurn:
                         playerClick = []
                     # Bat su kien cac nut khi dung chuot
-                    if location[0]//WIDTH_BUTTON in range(6, 9) and location[1]//HEIGHT_BUTTON == 7:
-                        col_btn = location[0]//WIDTH_BUTTON
-                        row_btn = location[1]//HEIGHT_BUTTON
+                    if location[0] // WIDTH_BUTTON in range(6, 9) and location[1] // HEIGHT_BUTTON == 7:
+                        col_btn = location[0] // WIDTH_BUTTON
+                        row_btn = location[1] // HEIGHT_BUTTON
+                        BUTTON_SFX.play()
                         if (row_btn, col_btn) == (7, 6):
+                            time.sleep(0.4)
                             gs.undoMove()
                             moveMake = True
                             gameOver = False
@@ -103,7 +122,9 @@ def main(player_one, player_two):
                                 moveFinderProcess.terminate()
                                 aiThingking = False
                             moveUndo = True
+
                         elif (row_btn, col_btn) == (7, 7):
+                            time.sleep(0.4)
                             gs = ChessEngine.GameState()
                             validMoves = gs.getValidMove()
                             moveMake = False
@@ -116,10 +137,13 @@ def main(player_one, player_two):
                                 aiThingking = False
                                 moveMake = True
                                 moveFinderProcess = None
+
                         elif (row_btn, col_btn) == (7, 8):
+                            time.sleep(0.4)
                             if aiThingking:
                                 moveFinderProcess.terminate()
                             running = False
+
             # Bat su kien cac nut khi dung ban phim
             elif e.type == pg.KEYDOWN:
                 if e.key == pg.K_z:
@@ -148,7 +172,6 @@ def main(player_one, player_two):
                         moveFinderProcess.terminate()
                     running = False
 
-
         # AI MOVE FINDER
         if not gameOver and not humanTurn and not moveUndo:
             if not aiThingking:
@@ -158,8 +181,8 @@ def main(player_one, player_two):
                 # gap loi not responding
                 returnQueue = Queue()
                 # Khi Process bat dau thi goi ham tim nuoc di cua AI dau tien va xu ly, sau do dua vao returnQueue
-                moveFinderProcess = Process(target=AI.findBestMove, args=(gs, validMoves, returnQueue))
-                moveFinderProcess.start() # Goi ham findBestMove(gs, validMoves, returnQueue)
+                moveFinderProcess = Process(target=AI.findBestMove, args=(gs, validMoves, returnQueue, level))
+                moveFinderProcess.start()  # Goi ham findBestMove(gs, validMoves, returnQueue)
 
             if not moveFinderProcess.is_alive():
                 # Neu process con xu ly thi Ai khong duoc thuc hien nuoc di
@@ -169,6 +192,12 @@ def main(player_one, player_two):
                 if AIMove is None:
                     AIMove = AI.findRandomMoves(validMoves)
                 gs.makeMove(AIMove, isBotPromote=True)
+                if AIMove.isCapture or AIMove.isEnpassant:
+                    CAPTURED_SFX.play()
+                # elif gs.inCheck():
+                #     CHECK_SFX.play()
+                else:
+                    MOVE_SFX.play()
                 # print("AI:" + AIMove.getChessNotation())
                 moveMake = True
                 aiThingking = False
@@ -180,6 +209,38 @@ def main(player_one, player_two):
 
         Board.drawGameState(screen, gs, validMoves, sqSelected)
         Board.drawMoveButton(screen)
+        # Ve canh bao chieu tuong
+        if gs.inCheck():
+            # Chi cho nhap nhay surface canh bao 1 lan duy nhat
+            # Neu so lan ve la lan thu 0 thi dung lai ko ve nua va dat gia tri cua draw_times = 0 de luon ve surface
+            # canh bao theo lan thu 0 (lan cuoi cung)
+            # Neu so lan ve khong phai lan cuoi cung thi tiep tuc ve~
+            # Chi khi nao chua xuat hien hieu ung nhap nhay thi moi phat am thanh
+            if count_draw_times == 0 and draw_times == 3:
+                CHECK_SFX.play()
+            if draw_times < count_draw_times:
+                draw_times = 0
+            else:
+                draw_times -= 1
+            # Ve hieu ung nhap nhay khi bi chieu tuong - khi la lan cuoi thi dung lai khong ve nua
+            # Dung lai khong ve nua bang cach: Tang gia tri cua bien dem so lan ve canh bao thanh 1
+            # Nghia la: Chi duoc ve hieu ung nhap nhay khi chieu tuong 1 lan duy nhat
+            if draw_times == 2:
+                Board.drawCheckWarning(screen, gs.whiteKingLocation if gs.whiteToMove else gs.blackKingLocation, alpha=150)
+                time.sleep(0.22)
+            elif draw_times == 1:
+                Board.drawCheckWarning(screen, gs.whiteKingLocation if gs.whiteToMove else gs.blackKingLocation, alpha=0)
+                time.sleep(0.22)
+            elif draw_times == 0:
+                Board.drawCheckWarning(screen, gs.whiteKingLocation if gs.whiteToMove else gs.blackKingLocation, alpha=150)
+                if count_draw_times == 0:
+                    count_draw_times += 1
+
+        # Neu khong la chieu tuong thi dua gia tri dem so lan ve canh bao va so lan ve canh bao ve gia tri goc
+        else:
+            count_draw_times = 0
+            draw_times = 3
+
         global isWin
         if gs.checkMate:
             gameOver = True
@@ -238,19 +299,20 @@ def main(player_one, player_two):
         clock.tick(MAX_FPS)  # 1 giay co max_fps khung hinh
         pg.display.flip()
 
+
 # isWin = 1 => black win
 # isWin = 2 => white win
 def Level():
     temp, level = FormSignIn.showInformation()
-    if level > 0 and level < 3:
+    if 0 <= level < 3:
         if isWin == 1:
             if level != 1:
                 level -= 1
         elif isWin == 2:
-                level += 1
+            level += 1
     elif level == 3:
         if isWin == 1:
-                level -= 1
+            level -= 1
         elif isWin == 2:
             pass
     return level

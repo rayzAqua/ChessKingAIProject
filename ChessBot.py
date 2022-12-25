@@ -33,8 +33,7 @@ CHECKMATE = 1000
 # Chieu bi la khi di duong nao` cung bi doi thu de doa, cho nen chieu bi se = 0, = 0 tot hon la thuc hien nuoc di
 # voi rui ro la bi an mat nuoc do
 STALEMATE = 0
-level = FormSignIn.showLevel()
-DEPTH = level
+# DEPTH = FormSignIn.level
 # print(DEPTH)
 # Tao ra mot so nguyen i ngau nhien va truyen no vao list validMoves, sau do tra ve validMove[i]
 def findRandomMoves(validMoves):
@@ -100,10 +99,15 @@ def findBestMoveMinMaxNoRecursively(gs, validMoves):
     return bestPlayerMove
 
 # Ham ho tro goi de quy MinMax
-def findBestMove(gs, validMoves, returnQueue):
-    global botBestMove, counter
+def findBestMove(gs, validMoves, returnQueue, level):
+    global botBestMove, counter, DEPTH
     counter = 0
     botBestMove = None
+    # res = ""
+    # for i in level:
+    #     res += str(i)
+    # DEPTH = int(res)
+    DEPTH = level
     # Lam xao tron danh sach validMove
     random.shuffle(validMoves)
     # findMoveMinMaxAlphaBeta(gs, validMoves, DEPTH, -CHECKMATE, CHECKMATE, gs.whiteToMove)
@@ -170,7 +174,7 @@ def findMoveMinMaxAlphaBeta(gs, validMoves, depth, alpha, beta, whiteToMove):
 
 # Bien the cua MinMax - NegaMax
 def findMoveNegaMaxAlphaBeta(gs, validMoves, depth, alpha, beta, turnValue):
-    global botBestMove, counter
+    global botBestMove, counter, DEPTH
     if depth == 0:
         return turnValue * scoreBoard(gs)
 

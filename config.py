@@ -2,6 +2,7 @@
 File này chứa các kích thước của trò chơi
 '''
 
+import socket
 
 '''
 GAME SCREEN
@@ -29,7 +30,9 @@ MAX_FPS = 15
 # Một thư viện ảnh dùng lưu trữ ảnh của từng quân cờ
 IMAGES = {}
 # CONNECT DATABASE
-IP = '192.168.1.30'
+USER_NAME = socket.gethostname()
+IP = socket.gethostbyname(USER_NAME)
 MSSQL_LOGIN = 'sa'
-MSSQL_PASSWORD = '123'
+MSSQL_PASSWORD = '123456'
 DB_NAME = 'ChessAIProject'
+LEVEL = 0

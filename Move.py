@@ -39,6 +39,7 @@ class Move():
         self.isEnpassant = isEnpassant
         if self.isEnpassant:
             self.pieceCaptured = 'bp' if self.pieceMoved == 'wp' else 'wp'
+
         # Castling
         self.isCastleMove = isCastleMove
         # Captured

@@ -1,8 +1,12 @@
+import time
+
 import pygame as pg
 import sys
+
+import FormMainMenu
 from config import *
 from Button import Button
-import FormGamePlay as ChessMain
+import FormSignIn
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
     return pg.font.Font("guiPNG/font.ttf", size)
@@ -17,6 +21,8 @@ def drawKingdom():
     s.fill("#CCFF66")
     TEXT = get_font(30).render("CHOOSE YOUR KINGDOM!", True, "#669966")
     TEXT_RECT = TEXT.get_rect(center=((WIDTH + MOVE_LOG_PANEL_WIDTH)/2, 175))
+    # SOUND EFFECT
+    BUTTON_COLOR = pg.mixer.Sound("music/button_effect.mp3")
 
     running = True
     while running:
@@ -48,16 +54,20 @@ def drawKingdom():
                 pg.quit()
                 sys.exit()
             if event.type == pg.MOUSEBUTTONDOWN:
+                BUTTON_COLOR.play()
                 if PLAY_AS_WHITE.checkForInput(MOUSE_POS):
+                    time.sleep(0.4)
                     return "white"
                 if PLAY_AS_BLACK.checkForInput(MOUSE_POS):
+                    time.sleep(0.4)
                     return "black"
-
-                if BACK_BUTTON.checkForInput(MOUSE_POS):
-                    running = False
-
                 if BOT_PK.checkForInput(MOUSE_POS):
+                    time.sleep(0.4)
                     return "bot"
+                if BACK_BUTTON.checkForInput(MOUSE_POS):
+                    time.sleep(0.4)
+                    running = False
+                    FormSignIn.exit()
 
         pg.display.update()
 
