@@ -14,10 +14,13 @@ import ChessEngine
 import Board
 import ChessBot as AI
 import FormSignIn
+import FormSwapColor
 
 '''
 Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nhat lai hinh anh
 '''
+
+
 def main(player_one, player_two):
     pg.init()
     pg.display.set_icon(pg.image.load("guiPNG/chessIcon.png"))
@@ -177,17 +180,17 @@ def main(player_one, player_two):
 
         Board.drawGameState(screen, gs, validMoves, sqSelected)
         Board.drawMoveButton(screen)
-
+        global isWin
         if gs.checkMate:
             gameOver = True
             if gs.whiteToMove:
                 case = Board.drawText(screen, "Black Win", "Gray", "Black", gameOver)
+                isWin = 1
                 FormSignIn.updateLevel()
-                # return 1
             else:
                 case = Board.drawText(screen, "White Win", "Gray", "White", gameOver)
+                isWin = 2
                 FormSignIn.updateLevel()
-                # return 2
             if case == "undo":
                 gs.undoMove()
                 moveMake = True
@@ -235,24 +238,19 @@ def main(player_one, player_two):
         clock.tick(MAX_FPS)  # 1 giay co max_fps khung hinh
         pg.display.flip()
 
+# isWin = 1 => black win
+# isWin = 2 => white win
 def Level():
     temp, level = FormSignIn.showInformation()
-    if level < 3:
-        if main(True, False) == 1:
-            level += 1
-        elif main(True, False) == 2:
-            level -= 1
-        elif main(False, True) == 1:
-            level -= 1
-        elif main(False, True) == 2:
-            level += 1
-    else:
-        if main(True, False) == 1:
-            pass
-        elif main(True, False) == 2:
-            level -= 1
-        elif main(False, True) == 1:
-            level -= 1
-        elif main(False, True) == 2:
+    if level > 0 and level < 3:
+        if isWin == 1:
+            if level != 1:
+                level -= 1
+        elif isWin == 2:
+                level += 1
+    elif level == 3:
+        if isWin == 1:
+                level -= 1
+        elif isWin == 2:
             pass
     return level

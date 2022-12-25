@@ -44,15 +44,25 @@ def showInformation():
     mySQLCursor.close()
     return mySQLResult
 
-def updateLevel(level):
+def updateLevel():
     username, temp = showInformation()
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
+    level = FormGamePlay.Level()
     mySQLCursor = MSSQLdb.cursor()
-    mySQLCursor.execute("UPDATE player SET id_level = " + level + " where username = '" + username + "';")
+    mySQLCursor.execute("UPDATE player SET id_level = " + str(level) + " where username = '" + username + "';")
+    MSSQLdb.commit()
+    mySQLCursor.close()
+    MSSQLdb.close()
+
+def showLevel():
+    MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
+    mySQLCursor = MSSQLdb.cursor()
+    mySQLCursor.execute("Select id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
     mySQLResult = mySQLCursor.fetchone()
     MSSQLdb.close()
     mySQLCursor.close()
-
+    return mySQLResult
+    
 root = Tk()
 root.title("SIGNIN")
 
