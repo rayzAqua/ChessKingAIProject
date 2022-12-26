@@ -17,14 +17,12 @@ temp = PIECE_NAME
 
 def loadWhitePromoteImage(IMG):
     for whitePromote in whitePromotes:
-        IMG[whitePromote] = pg.transform.scale(pg.image.load(
-            "images/" + whitePromote + ".png"), (SQ_SIZE, SQ_SIZE))
+        IMG[whitePromote] = pg.transform.scale(pg.image.load("images/" + whitePromote + ".png"), (SQ_SIZE, SQ_SIZE))
 
 
 def loadBlackPromoteImage(IMG):
     for blackPromote in blackPromotes:
-        IMG[blackPromote] = pg.transform.scale(pg.image.load(
-            "images/" + blackPromote + ".png"), (SQ_SIZE, SQ_SIZE))
+        IMG[blackPromote] = pg.transform.scale(pg.image.load("images/" + blackPromote + ".png"), (SQ_SIZE, SQ_SIZE))
 
 
 def drawPromoteImage(screen, s, col, row, whiteToMove):
@@ -56,7 +54,7 @@ def drawPawnPromote(screen, endCol, endRow, whiteToMove):
     # Ve button exit
     if whiteToMove:
         s = pg.Surface((WIDTH_PROMOTE, HEIGHT_PROMOTE))
-        s.fill("Green")
+        s.fill("White")
         # (SQ_SIZE * 7, SQ_SIZE * 0)
         screen.blit(s, (WIDTH_PROMOTE * col, HEIGHT_PROMOTE / ROW * (ROW-ROW)))
         # Ve hinh anh len surface s
@@ -74,7 +72,7 @@ def drawPawnPromote(screen, endCol, endRow, whiteToMove):
         screen.blit(text, text_rect)
     else:
         s = pg.Surface((WIDTH_PROMOTE, HEIGHT_PROMOTE))
-        s.fill("Green")
+        s.fill("White")
         # (SQ_SIZE * 7, SQ_SIZE * 0)
         screen.blit(s, (WIDTH_PROMOTE * col, HEIGHT_PROMOTE / ROW * ROW))
         # Ve hinh anh len surface s

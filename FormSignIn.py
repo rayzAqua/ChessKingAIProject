@@ -3,7 +3,7 @@ from PIL import ImageTk, Image
 import tkinter.messagebox as messagebox
 import pymssql as MSSQLCnn
 import FormMainMenu
-from config import IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME, LEVEL
+from config import IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME
 import FormGamePlay
 
 
@@ -29,7 +29,8 @@ def ClickToLogin():
             level = showLevel()
             level = ''.join(str(i) for i in level)
             level = int(level)
-            FormMainMenu.onePlayer(level)
+            isPlayerMode = False
+            FormMainMenu.onePlayer(level, isPlayerMode)
 
         MSSQLdb.close()
         mySQLCursor.close()
@@ -41,18 +42,19 @@ def SignupPage(event):
 def showInformation():
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
-    mySQLCursor.execute("Select username, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    mySQLCursor.execute("Select fullname, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    # mySQLCursor.execute("Select username, id_level from player where username = '" + '123' + "' and password = '" + '123' + "';")
     mySQLResult = mySQLCursor.fetchone()
     MSSQLdb.close()
     mySQLCursor.close()
     return mySQLResult
 
 def updateLevel():
-    username, temp = showInformation()
+    # fullname, temp = showInformation()
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     level = FormGamePlay.Level()
     mySQLCursor = MSSQLdb.cursor()
-    mySQLCursor.execute("UPDATE player SET id_level = " + str(level) + " where username = '" + username + "';")
+    mySQLCursor.execute("UPDATE player SET id_level = " + str(level) + " where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
     MSSQLdb.commit()
     mySQLCursor.close()
     MSSQLdb.close()
@@ -61,7 +63,6 @@ def showLevel():
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
     mySQLCursor.execute("SELECT id_level FROM dbo.player WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
-    # mySQLCursor.execute("SELECT level_name FROM dbo.player as p, dbo.level as l WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "' and p.id_level = l.id_level;")
     mySQLResult1 = mySQLCursor.fetchone()
     print(mySQLResult1)
     MSSQLdb.close()

@@ -23,7 +23,7 @@ Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nha
 '''
 
 
-def main(player_one, player_two, level):
+def main(player_one, player_two, level, isTwoMode):
     pg.init()
     pg.display.set_icon(pg.image.load("guiPNG/chessIcon.png"))
     pg.display.set_caption("Chess King")
@@ -86,7 +86,8 @@ def main(player_one, player_two, level):
                         for i in range(len(validMoves)):
                             if move == validMoves[i]:
                                 if move.isPawnPromotion:
-                                    pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow, gs.whiteToMove)
+                                    pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow,
+                                                                                gs.whiteToMove)
                                     if pieceName != "":
                                         gs.makeMove(validMoves[i], pieceName=pieceName)
                                         MOVE_SFX.play()
@@ -115,7 +116,7 @@ def main(player_one, player_two, level):
                         row_btn = location[1] // HEIGHT_BUTTON
                         BUTTON_SFX.play()
                         if (row_btn, col_btn) == (7, 6):
-                            time.sleep(0.4)
+                            time.sleep(0.3)
                             gs.undoMove()
                             moveMake = True
                             gameOver = False
@@ -125,7 +126,7 @@ def main(player_one, player_two, level):
                             moveUndo = True
 
                         elif (row_btn, col_btn) == (7, 7):
-                            time.sleep(0.4)
+                            time.sleep(0.3)
                             gs = ChessEngine.GameState()
                             validMoves = gs.getValidMove()
                             moveMake = False
@@ -140,7 +141,7 @@ def main(player_one, player_two, level):
                                 moveFinderProcess = None
 
                         elif (row_btn, col_btn) == (7, 8):
-                            time.sleep(0.4)
+                            time.sleep(0.3)
                             if aiThingking:
                                 moveFinderProcess.terminate()
                             running = False
@@ -148,6 +149,8 @@ def main(player_one, player_two, level):
             # Bat su kien cac nut khi dung ban phim
             elif e.type == pg.KEYDOWN:
                 if e.key == pg.K_z:
+                    BUTTON_SFX.play()
+                    time.sleep(0.3)
                     gs.undoMove()
                     moveMake = True
                     gameOver = False
@@ -156,6 +159,8 @@ def main(player_one, player_two, level):
                         aiThingking = False
                     moveUndo = True
                 elif e.key == pg.K_r:
+                    BUTTON_SFX.play()
+                    time.sleep(0.3)
                     gs = ChessEngine.GameState()
                     validMoves = gs.getValidMove()
                     moveMake = False
@@ -169,6 +174,8 @@ def main(player_one, player_two, level):
                         moveMake = True
                         moveFinderProcess = None
                 elif e.key == pg.K_ESCAPE:
+                    BUTTON_SFX.play()
+                    time.sleep(0.3)
                     if aiThingking:
                         moveFinderProcess.terminate()
                     running = False
@@ -248,17 +255,15 @@ def main(player_one, player_two, level):
             if gs.whiteToMove:
                 case = Board.drawText(screen, "Black Win", "Gray", "Black", gameOver)
                 isWin = 1
-                if FormMainMenu.CheckPlayer() == 1:
-                    pass
-                else:
+                if not isTwoMode:
                     FormSignIn.updateLevel()
             else:
                 case = Board.drawText(screen, "White Win", "Gray", "White", gameOver)
                 isWin = 2
-                if FormMainMenu.CheckPlayer() == 1:
-                    pass
-                else:
+                if not isTwoMode:
                     FormSignIn.updateLevel()
+                    print("Done")
+
             if case == "undo":
                 gs.undoMove()
                 moveMake = True
@@ -276,6 +281,25 @@ def main(player_one, player_two, level):
             elif case == "back":
                 gameOver = False
                 running = False
+
+            elif case == "update":
+                # Update level sau khi xong game
+                # Neu khong la che do 2 nguoi thi update
+                if not isTwoMode:
+                    level = FormSignIn.showLevel()
+                    res = ""
+                    for i in level:
+                        res += str(i)
+                    level = int(res)
+                    print(level)
+
+                gs = ChessEngine.GameState()
+                validMoves = gs.getValidMove()
+                moveMake = False
+                sqSelected = ()
+                playerClick = []
+                gameOver = False
+                moveUndo = False
 
         elif gs.staleMate:
             gameOver = True
@@ -302,6 +326,15 @@ def main(player_one, player_two, level):
             elif case == "back":
                 gameOver = False
                 running = False
+
+            elif case == "update":
+                gs = ChessEngine.GameState()
+                validMoves = gs.getValidMove()
+                moveMake = False
+                sqSelected = ()
+                playerClick = []
+                gameOver = False
+                moveUndo = False
 
         clock.tick(MAX_FPS)  # 1 giay co max_fps khung hinh
         pg.display.flip()

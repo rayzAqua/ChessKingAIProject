@@ -95,17 +95,17 @@ def drawText(screen, text, color1, color2, gameOver):
                 r = mouse_endgame_pos[1] // HEIGHT_BUTTON
                 BUTTON_OK.play()
                 if (r, c) == (7, 6):
-                    time.sleep(0.4)
+                    time.sleep(0.3)
                     return "undo"
                 elif (r, c) == (7, 7):
-                    time.sleep(0.4)
+                    time.sleep(0.3)
                     return "reset"
                 elif (r, c) == (7, 8):
-                    time.sleep(0.4)
+                    time.sleep(0.3)
                     return "back"
                 elif row in range(4, 6) and col in range(2, 4):
-                    time.sleep(0.4)
-                    return "reset"
+                    time.sleep(0.3)
+                    return "update"
         pg.display.update()
 
 
@@ -243,7 +243,7 @@ def drawMoveLog(screen, gs):
         for j in range(movesPerRow):
             if i+j < len(moveTexts):
                 text += moveTexts[i+j]
-        textObject = font.render(text, True, pg.Color('Gray'))
+        textObject = font.render(text, True, pg.Color('Black'))
         textLocation = moveLogRect.move(padding, textY)
         screen.blit(textObject, textLocation)
         textY += textObject.get_height() + lineSpacing

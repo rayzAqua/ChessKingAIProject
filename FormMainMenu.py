@@ -9,29 +9,28 @@ import FormGamePlay as ChessMain
 import FormSwapColor as kingdom
 import FormSignIn
 
-
 def get_font(size):  # Returns Press-Start-2P in the desired size
     return pg.font.Font("guiPNG/font.ttf", size)
 
 
-def onePlayer(level):
+def onePlayer(level, isPlayerMode):
     pg.display.set_caption("Chess King")
     pg.display.set_icon(pg.image.load("guiPNG/chessIcon.png"))
 
     kingdomColor = kingdom.drawKingdom()
     if kingdomColor == "white":
-        ChessMain.main(True, False, level)
+        ChessMain.main(True, False, level, isPlayerMode)
     elif kingdomColor == "black":
-        ChessMain.main(False, True, level)
+        ChessMain.main(False, True, level, isPlayerMode)
     elif kingdomColor == "bot":
-        ChessMain.main(False, False, level)
+        ChessMain.main(False, False, level, isPlayerMode)
 
 
-def twoPlayer():
+def twoPlayer(isPlayerMode):
     pg.display.set_caption("Chess King")
     pg.display.set_icon(pg.image.load("guiPNG/chessIcon.png"))
 
-    ChessMain.main(True, True, 0)
+    ChessMain.main(True, True, 0, isPlayerMode)
     # main.mainloop()
 
 
@@ -42,7 +41,7 @@ def main_menu():
     pg.display.set_caption("Chess King")
     BG_MUSIC = pg.mixer.Sound("music/bg_music.mp3")
     BG_MUSIC.set_volume(0.3)
-    # BG_MUSIC.play(-1)
+    BG_MUSIC.play(-1)
     MENU_BUTTON_SFX = pg.mixer.Sound("music/button_effect.mp3")
     SCREEN = pg.display.set_mode((WIDTH_MENU, HEIGHT))
     while True:
@@ -83,23 +82,29 @@ def main_menu():
             if event.type == pg.MOUSEBUTTONDOWN:
                 MENU_BUTTON_SFX.play()
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    time.sleep(0.4)
+                    time.sleep(0.3)
                     # onePlayer()
-                    pg.quit()
+                    # pg.quit()
                     FormSignIn.formSignin()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    CheckPlayer()
-                    time.sleep(0.4)
-                    twoPlayer()
+                    time.sleep(0.3)
+                    isPlayerMode = True
+                    twoPlayer(isPlayerMode)
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    time.sleep(0.4)
+                    time.sleep(0.3)
                     pg.quit()
                     sys.exit()
 
         pg.display.flip()
 
-def CheckPlayer():
-    return 1
+# def CheckPlayer(player):
+#     if player:
+#         is_Two_Mode = True
+#         return is_Two_Mode
+#     else:
+#         is_Two_Mode = False
+#     return is_Two_Mode
+
 
 if __name__ == "__main__":
     main_menu()
