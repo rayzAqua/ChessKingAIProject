@@ -16,6 +16,7 @@ import Board
 import ChessBot as AI
 import FormSignIn
 import FormSwapColor
+import FormMainMenu
 
 '''
 Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nhat lai hinh anh
@@ -247,11 +248,17 @@ def main(player_one, player_two, level):
             if gs.whiteToMove:
                 case = Board.drawText(screen, "Black Win", "Gray", "Black", gameOver)
                 isWin = 1
-                FormSignIn.updateLevel()
+                if FormMainMenu.CheckPlayer() == 1:
+                    pass
+                else:
+                    FormSignIn.updateLevel()
             else:
                 case = Board.drawText(screen, "White Win", "Gray", "White", gameOver)
                 isWin = 2
-                FormSignIn.updateLevel()
+                if FormMainMenu.CheckPlayer() == 1:
+                    pass
+                else:
+                    FormSignIn.updateLevel()
             if case == "undo":
                 gs.undoMove()
                 moveMake = True

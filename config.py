@@ -33,6 +33,6 @@ IMAGES = {}
 USER_NAME = socket.gethostname()
 IP = socket.gethostbyname(USER_NAME)
 MSSQL_LOGIN = 'sa'
-MSSQL_PASSWORD = '123456'
+MSSQL_PASSWORD = '123'
 DB_NAME = 'ChessAIProject'
 LEVEL = 0

@@ -88,6 +88,7 @@ def main_menu():
                     pg.quit()
                     FormSignIn.formSignin()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CheckPlayer()
                     time.sleep(0.4)
                     twoPlayer()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
@@ -97,6 +98,8 @@ def main_menu():
 
         pg.display.flip()
 
+def CheckPlayer():
+    return 1
 
 if __name__ == "__main__":
     main_menu()

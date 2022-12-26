@@ -27,10 +27,8 @@ def ClickToLogin():
             # print(showInformation())
             # root.destroy()
             level = showLevel()
-            res = ""
-            for i in level:
-                res += str(i)
-            level = int(res)
+            level = ''.join(str(i) for i in level)
+            level = int(level)
             FormMainMenu.onePlayer(level)
 
         MSSQLdb.close()
@@ -44,7 +42,6 @@ def showInformation():
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
     mySQLCursor.execute("Select username, id_level from player where username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
-    # mySQLCursor.execute("Select username, id_level from player where username = '" + '123' + "' and password = '" + '123' + "';")
     mySQLResult = mySQLCursor.fetchone()
     MSSQLdb.close()
     mySQLCursor.close()
@@ -63,8 +60,8 @@ def updateLevel():
 def showLevel():
     MSSQLdb = MSSQLCnn.connect(IP, MSSQL_LOGIN, MSSQL_PASSWORD, DB_NAME)
     mySQLCursor = MSSQLdb.cursor()
-    # mySQLCursor.execute("SELECT id_level FROM dbo.player WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
-    mySQLCursor.execute("SELECT level_name FROM dbo.player as p, dbo.level as l WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "' and p.id_level = l.id_level;")
+    mySQLCursor.execute("SELECT id_level FROM dbo.player WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
+    # mySQLCursor.execute("SELECT level_name FROM dbo.player as p, dbo.level as l WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "' and p.id_level = l.id_level;")
     mySQLResult1 = mySQLCursor.fetchone()
     print(mySQLResult1)
     MSSQLdb.close()
