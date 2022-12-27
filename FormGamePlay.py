@@ -285,10 +285,8 @@ def main(player_one, player_two, level, isTwoMode):
                 # Neu khong la che do 2 nguoi thi update
                 if not isTwoMode:
                     level = FormSignIn.showLevel()
-                    res = ""
-                    for i in level:
-                        res += str(i)
-                    level = int(res)
+                    level = ''.join(str(i) for i in level)
+                    level = int(level)
                     print(level)
 
                 gs = ChessEngine.GameState()
