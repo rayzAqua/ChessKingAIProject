@@ -8,15 +8,12 @@ import pygame as pg
 import sys
 from multiprocessing import Process, Queue
 
-import Button
 import FormPawnPromote
 from config import *
 import ChessEngine
 import Board
 import ChessBot as AI
 import FormSignIn
-import FormSwapColor
-import FormMainMenu
 
 '''
 Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nhat lai hinh anh
@@ -85,19 +82,18 @@ def main(player_one, player_two, level, isTwoMode):
                         move = ChessEngine.Move(playerClick[0], playerClick[1], gs.board)
                         for i in range(len(validMoves)):
                             if move == validMoves[i]:
-                                if move.isPawnPromotion:
-                                    pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow,
-                                                                                gs.whiteToMove)
+                                # Kiem tra phong ham
+                                if validMoves[i].isPawnPromotion:
+                                    pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow, gs.whiteToMove)
                                     if pieceName != "":
                                         gs.makeMove(validMoves[i], pieceName=pieceName)
                                         MOVE_SFX.play()
+                                # Neu khong la phong ham
                                 else:
                                     # print("Player: " + move.getChessNotation())
                                     gs.makeMove(validMoves[i])
                                     if validMoves[i].isCapture or validMoves[i].isEnpassant:
                                         CAPTURED_SFX.play()
-                                    # elif gs.inCheck():
-                                    #     CHECK_SFX.play()
                                     else:
                                         MOVE_SFX.play()
                                 moveMake = True
@@ -199,11 +195,13 @@ def main(player_one, player_two, level, isTwoMode):
                 AIMove = returnQueue.get()
                 if AIMove is None:
                     AIMove = AI.findRandomMoves(validMoves)
-                gs.makeMove(AIMove, isBotPromote=True)
+                if AIMove.isPawnPromotion:
+                    gs.makeMove(AIMove, pieceName="Q")
+                else:
+                    gs.makeMove(AIMove)
+                # SOUND EFFECT
                 if AIMove.isCapture or AIMove.isEnpassant:
                     CAPTURED_SFX.play()
-                # elif gs.inCheck():
-                #     CHECK_SFX.play()
                 else:
                     MOVE_SFX.play()
                 # print("AI:" + AIMove.getChessNotation())

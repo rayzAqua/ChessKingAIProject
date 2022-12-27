@@ -22,7 +22,7 @@ class Move():
                    "e": 3, "f": 2, "g": 1, "h": 0}
     colsToFiles = {v: k for k, v in filesToCols.items()}
 
-    def __init__(self, startSq, endSq, board, isEnpassant=False, isCastleMove=False):
+    def __init__(self, startSq, endSq, board, isEnpassant=False, isCastleMove=False, isPromote=False):
         # Create a move and MoveID for check move in getvalidMoves
         self.startRow = startSq[0]
         self.startCol = startSq[1]
@@ -32,9 +32,10 @@ class Move():
         self.pieceCaptured = board[self.endRow][self.endCol]  # Luu lai toa do ban dau cua o vuong dc chon thu 2
         self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
         # Pawn Promote
-        self.isPawnPromotion = False
-        if (self.pieceMoved == "wp" and self.endRow == 0) or (self.pieceMoved == "bp" and self.endRow == 7):
-            self.isPawnPromotion = True
+        self.isPawnPromotion = isPromote
+        # self.isPawnBotPromotion = False
+        # if (self.pieceMoved == "wp" and self.endRow == 0) or (self.pieceMoved == "bp" and self.endRow == 7):
+        #     self.isPawnPromotion = True
         # En passant
         self.isEnpassant = isEnpassant
         if self.isEnpassant:

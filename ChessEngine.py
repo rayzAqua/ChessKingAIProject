@@ -12,12 +12,12 @@ class GameState():
         # Phan tu "--" dai dien cho mot o trong noi khong co quan co nao duoc dat len
         self.board = [
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
-            ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+            ["bp", "bp", "bp", "bp", "bp", "bp", "wp", "bp"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
+            ["wp", "wp", "wp", "wp", "wp", "wp", "bp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
         # self.board = [
@@ -53,7 +53,7 @@ class GameState():
                                                self.currentCastlingRights.bks, self.currentCastlingRights.bqs)]
 
     # Thuc hien mot nuoc di dua tren thong tin cua class Move
-    def makeMove(self, move, isBotPromote=False, pieceName=""):
+    def makeMove(self, move, pieceName=""):
         # Normal Move
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.board[move.startRow][move.startCol] = "--"
@@ -68,10 +68,7 @@ class GameState():
 
         # Pawn Promotion
         if move.isPawnPromotion:
-            if isBotPromote:
-                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + "Q"
-            else:
-                self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
+            self.board[move.endRow][move.endCol] = move.pieceMoved[0] + pieceName
 
         # En passsant
         # Neu con tot di 2 nuoc thi luot tiep theo co the thuc hien en passant - luu vi tri duoc phep di vao list enpassant
@@ -180,34 +177,61 @@ class GameState():
     # Di len hoac di qua trai thi tru`, di xuong hoac qua phai thi cong
     def getPawnMoves(self, r, c, moves):
         if self.whiteToMove:  # Luot di cua quan mau trang
+            # Pawn promote
+            if r - 1 == 0 and self.board[r - 1][c] == "--":
+                moves.append(Move((r, c), (r - 1, c), self.board, isPromote=True))
+            # Normal move
             if self.board[r - 1][c] == "--":  # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r - 1, c), self.board))
                 if r == 6 and self.board[r - 2][c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r - 2, c), self.board))
-            if c - 1 >= 0:  # Bat quan dich ben trai
+
+            if c - 1 >= 0 and r - 1 >= 0:  # Bat quan dich ben trai
                 if self.board[r - 1][c - 1][0] == "b":
-                    moves.append(Move((r, c), (r - 1, c - 1), self.board))
+                    if r - 1 == 0: # Hang thu 0 la phong ham (doi voi quan trang)
+                        moves.append(Move((r, c), (r - 1, c - 1), self.board, isPromote=True))
+                    else:
+                        moves.append(Move((r, c), (r - 1, c - 1), self.board))
+                # En passant
                 elif (r - 1, c - 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r - 1, c - 1), self.board, isEnpassant=True))
-            if c + 1 <= 7:  # Bat quan dich ben phai
+
+            if c + 1 <= 7 and r - 1 >= 0:  # Bat quan dich ben phai
                 if self.board[r - 1][c + 1][0] == "b":
-                    moves.append(Move((r, c), (r - 1, c + 1), self.board))
+                    if r - 1 == 0: # Hang thu 0 la phong ham (doi voi quan trang)
+                        moves.append(Move((r, c), (r - 1, c + 1), self.board, isPromote=True))
+                    else:
+                        moves.append(Move((r, c), (r - 1, c + 1), self.board))
+                # En passant
                 elif (r - 1, c + 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r - 1, c + 1), self.board, isEnpassant=True))
 
         else:  # Luot di cua quan mau den
-            if self.board[r + 1][c] == "--":  # Quan tot di mot o vuong
+            # Pawn promote
+            if r + 1 == 7 and self.board[r + 1][c] == "--":
+                moves.append(Move((r, c), (r + 1, c), self.board, isPromote=True))
+            # Normal move
+            if self.board[r + 1][c] == "--": # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r + 1, c), self.board))
                 if r == 1 and self.board[r + 2][c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r + 2, c), self.board))
-            if c - 1 >= 0:  # Bat quan dich ben trai
+
+            if c - 1 >= 0 and r + 1 <= 7:  # Bat quan dich ben trai
                 if self.board[r + 1][c - 1][0] == "w":
-                    moves.append(Move((r, c), (r + 1, c - 1), self.board))
+                    if r + 1 == 7:
+                        moves.append(Move((r, c), (r + 1, c - 1), self.board, isPromote=True))
+                    else:
+                        moves.append(Move((r, c), (r + 1, c - 1), self.board))
+                # En passant
                 elif (r + 1, c - 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r + 1, c - 1), self.board, isEnpassant=True))
-            if c + 1 <= 7:  # Bat quan dich ben phai
+
+            if c + 1 <= 7 and r + 1 <= 7:  # Bat quan dich ben phai
                 if self.board[r + 1][c + 1][0] == "w":
-                    moves.append(Move((r, c), (r + 1, c + 1), self.board))
+                    if r + 1 >= 7:
+                        moves.append(Move((r, c), (r + 1, c + 1), self.board, isPromote=True))
+                    else:
+                        moves.append(Move((r, c), (r + 1, c + 1), self.board))
                 elif (r + 1, c + 1) == self.enpassantPossible:
                     moves.append(Move((r, c), (r + 1, c + 1), self.board, isEnpassant=True))
 
@@ -365,11 +389,6 @@ class GameState():
         # 1. Lay toan bo nuoc di co the cua phe minh
         moves = self.getAllPossibleMove()
 
-        if self.whiteToMove:
-            self.getCastleMoves(self.whiteKingLocation[0], self.whiteKingLocation[1], moves)
-        else:
-            self.getCastleMoves(self.blackKingLocation[0], self.blackKingLocation[1], moves)
-
         # 2. Voi moi nuoc di trong buoc 1, thuc hien mot nuoc di co trong list tren ban co
         for i in range(len(moves) - 1, -1, -1):  # Duyet tu nuoc tu cuoi mang de khong bo sot phan tu nao
             self.makeMove(moves[i])
@@ -380,6 +399,11 @@ class GameState():
                 moves.remove(moves[i])
             self.whiteToMove = not self.whiteToMove  # Chuyen lai thanh luot cua doi thu
             self.undoMove()  # undoMove de nuoc di do quay ve vi tri ban dau
+
+        if self.whiteToMove:
+            self.getCastleMoves(self.whiteKingLocation[0], self.whiteKingLocation[1], moves)
+        else:
+            self.getCastleMoves(self.blackKingLocation[0], self.blackKingLocation[1], moves)
 
         if len(moves) == 0:  # Quan vua bi chieu hoan toan khong co duong thoat nen khong co duong di nao duoc tao ra
             if self.inCheck():  # Neu vua khong con duong thoat ,a the co` hien tai da chieu vua thi chieu tuong

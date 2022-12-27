@@ -103,10 +103,6 @@ def findBestMove(gs, validMoves, returnQueue, level):
     global botBestMove, counter, DEPTH
     counter = 0
     botBestMove = None
-    # res = ""
-    # for i in level:
-    #     res += str(i)
-    # DEPTH = int(res)
     DEPTH = level
     # Lam xao tron danh sach validMove
     random.shuffle(validMoves)
@@ -182,7 +178,13 @@ def findMoveNegaMaxAlphaBeta(gs, validMoves, depth, alpha, beta, turnValue):
 
     maxScore = -CHECKMATE
     for move in validMoves:
-        gs.makeMove(move)
+        # Kiem tra phong ham truoc di thuc hien nuoc di
+        if move.isPawnPromotion:
+            gs.makeMove(move, pieceName="Q")
+            # print("Done", move, move.isPawnPromotion)
+        else:
+            gs.makeMove(move)
+            # print("OK", move, move.isPawnPromotion)
         opponentMoves = gs.getValidMove()
         score = -findMoveNegaMaxAlphaBeta(gs, opponentMoves, depth - 1, -beta, -alpha, -turnValue)
         if score > maxScore:
