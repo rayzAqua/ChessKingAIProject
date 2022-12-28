@@ -8,3 +8,8 @@ Result "1-0"
 Result "1-0"
 1. d5 f4  2. Qa4 h4  3. Qxa2 Nh3  4. Qxa1 c4  5. Qxb2 g4  6. Qxb1 e4  7. Qxe4 d3  8. Qxd3 Qd2  9. Qxc4 Rh2  10. a5 Ng1  11. Qxf1 Qe1  12. Qxf4 Qe5  13. Qxe5 Rh3  14. Ra6 Be3  15. Qxe3 g5  16. Rc6 h5  17. Rc4 g6  18. Rd4 Kc2  19. Qxh3 Kb1  20. Qb3 Ka1  21. Ra4 
 1-0
+[Event "Chess Game"]
+[Date "2022-12-28 18:30:40"
+Result "0-0"
+1. e5 e4  2. Qe6 Nc3  3. Qg4 f3  4. Qxe4 Qh4  5. Qxh4 Rb1  6. Qxh2 Ba6  7. Qxg2 Rh3  8. Qxh3 Ne4  9. Qh1 Be2  10. Qxg1 Bf1  11. Qg3 a4  12. Qxf3 Ke1  13. Qxe4 Kf2  14. Qb4 b3  15. Qxa4 Bb2  16. Qa3 b4  17. Qxb2 Re1  18. Qxc2 Kg2  19. Qxd2 Kf3  20. Qxb4 Bh3  21. Qxe1 Bg2  22. Qg1 Bf1  23. Qxf1 Ke4  24. h5 Kd5  25. h4 Kxe5  26. h3 Kd5  27. h2 Ke4  28. h1=+ Ke5  29. h1=+ Ke4  30. h1=+ Ke3  31. h1=+ Kd4  32. h1=+ Kc3  33. Rh3 Kd4  34. Ne7 Ke5  35. Nc6 Kd5  36. Rd3 Kc4  37. Rd1 Kb3  38. Qb5 Kc3  39. Ne5 Kc2  40. Nf3 Kxd1  41. Ng1 Kc2  42. Qb4 Kd1  43. Qb3 Kc1  44. Bc5 Kd2  45. Bd6 Ke1  46. Bg3 Kf1  47. Nf3 Kg2  48. Ne1 Kh3  49. Qe6 Kxg3  50. a5 Kxh2  51. Ra6 Kg1  52. Rd6 Kf1  53. Rd5 Kg1  54. Rg5 Kf1  55. Nd3 
+0-0

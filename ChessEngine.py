@@ -181,7 +181,7 @@ class GameState():
             if r - 1 == 0 and self.board[r - 1][c] == "--":
                 moves.append(Move((r, c), (r - 1, c), self.board, isPromote=True))
             # Normal move
-            if self.board[r - 1][c] == "--":  # Quan tot di mot o vuong
+            elif self.board[r - 1][c] == "--":  # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r - 1, c), self.board))
                 if r == 6 and self.board[r - 2][c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r - 2, c), self.board))
@@ -207,11 +207,11 @@ class GameState():
                     moves.append(Move((r, c), (r - 1, c + 1), self.board, isEnpassant=True))
 
         else:  # Luot di cua quan mau den
-            # Pawn promote
+            # # Pawn promote
             if r + 1 == 7 and self.board[r + 1][c] == "--":
                 moves.append(Move((r, c), (r + 1, c), self.board, isPromote=True))
             # Normal move
-            if self.board[r + 1][c] == "--": # Quan tot di mot o vuong
+            elif self.board[r + 1][c] == "--": # Quan tot di mot o vuong
                 moves.append(Move((r, c), (r + 1, c), self.board))
                 if r == 1 and self.board[r + 2][c] == "--":  # Quan tot di hai o vuong khi va chi khi no o vi tri ban dau
                     moves.append(Move((r, c), (r + 2, c), self.board))

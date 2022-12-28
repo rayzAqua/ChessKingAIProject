@@ -89,6 +89,7 @@ def main(player_one, player_two, level, isTwoMode):
                                     pieceName = FormPawnPromote.drawPawnPromote(screen, move.endCol, move.endRow, gs.whiteToMove)
                                     if pieceName != "":
                                         gs.makeMove(validMoves[i], pieceName=pieceName)
+                                        print("Done", pieceName)
                                         MOVE_SFX.play()
                                 # Neu khong la phong ham
                                 else:
@@ -343,6 +344,23 @@ def main(player_one, player_two, level, isTwoMode):
                 running = False
 
             elif case == "update":
+                testMoveLog = str(Board.drawMoveLog(screen, gs))
+                testMoveLog = testMoveLog.replace("'", "")
+                testMoveLog = testMoveLog.replace("[", "")
+                testMoveLog = testMoveLog.replace("]", "")
+                testMoveLog = testMoveLog.replace(",", "")
+                resultLog = "0-0"
+                now = datetime.now()
+                time_string = now.strftime("%Y-%m-%d %H:%M:%S")
+                pgn_string = "\n[Event \"Chess Game\"]\n" + \
+                             "[Date \"" + time_string + \
+                             "\"\n" + "Result \"" + resultLog + \
+                             "\"\n" + testMoveLog + \
+                             "\n" + resultLog
+                # print(pgn_string)
+                with open('game.pgn', 'a') as f:
+                    f.write(pgn_string)
+
                 gs = ChessEngine.GameState()
                 validMoves = gs.getValidMove()
                 moveMake = False
