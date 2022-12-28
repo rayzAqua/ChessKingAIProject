@@ -64,7 +64,6 @@ def showLevel():
     mySQLCursor = MSSQLdb.cursor()
     mySQLCursor.execute("SELECT id_level FROM dbo.player WHERE username = '" + usernameEntry.get().strip() + "' and password = '" + passwordEntry.get().strip() + "';")
     mySQLResult1 = mySQLCursor.fetchone()
-    print(mySQLResult1)
     MSSQLdb.close()
     mySQLCursor.close()
     # print(usernameEntry.get())

@@ -15,6 +15,7 @@ import Board
 import ChessBot as AI
 import FormSignIn
 from datetime import datetime
+import saveDataset
 
 
 '''
@@ -290,25 +291,13 @@ def main(player_one, player_two, level, isTwoMode):
                     level = FormSignIn.showLevel()
                     level = ''.join(str(i) for i in level)
                     level = int(level)
-                testMoveLog = str(Board.drawMoveLog(screen, gs))
-                testMoveLog = testMoveLog.replace("'", "")
-                testMoveLog = testMoveLog.replace("[", "")
-                testMoveLog = testMoveLog.replace("]", "")
-                testMoveLog = testMoveLog.replace(",", "")
                 if isWin == 1:
                     resultLog = "0-1"
                 elif isWin == 2:
                     resultLog = "1-0"
-                now = datetime.now()
-                time_string = now.strftime("%Y-%m-%d %H:%M:%S")
-                pgn_string = "\n[Event \"Chess Game\"]\n" + \
-                            "[Date \"" + time_string + \
-                            "\"\n" + "Result \"" + resultLog + \
-                            "\"\n" + testMoveLog + \
-                            "\n" + resultLog
-                # print(pgn_string)
-                with open('game.pgn', 'a') as f:
-                    f.write(pgn_string)
+                depth = FormSignIn.showLevel()
+                depth = str(depth)
+                saveDataset.saveDataset(screen, gs, resultLog, depth)
                 gs = ChessEngine.GameState()
                 validMoves = gs.getValidMove()
                 moveMake = False
@@ -344,23 +333,10 @@ def main(player_one, player_two, level, isTwoMode):
                 running = False
 
             elif case == "update":
-                testMoveLog = str(Board.drawMoveLog(screen, gs))
-                testMoveLog = testMoveLog.replace("'", "")
-                testMoveLog = testMoveLog.replace("[", "")
-                testMoveLog = testMoveLog.replace("]", "")
-                testMoveLog = testMoveLog.replace(",", "")
                 resultLog = "0-0"
-                now = datetime.now()
-                time_string = now.strftime("%Y-%m-%d %H:%M:%S")
-                pgn_string = "\n[Event \"Chess Game\"]\n" + \
-                             "[Date \"" + time_string + \
-                             "\"\n" + "Result \"" + resultLog + \
-                             "\"\n" + testMoveLog + \
-                             "\n" + resultLog
-                # print(pgn_string)
-                with open('game.pgn', 'a') as f:
-                    f.write(pgn_string)
-
+                depth = FormSignIn.showLevel()
+                depth = str(depth)
+                saveDataset.saveDataset(screen, gs, resultLog, depth)
                 gs = ChessEngine.GameState()
                 validMoves = gs.getValidMove()
                 moveMake = False
