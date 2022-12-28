@@ -14,6 +14,8 @@ import ChessEngine
 import Board
 import ChessBot as AI
 import FormSignIn
+from datetime import datetime
+
 
 '''
 Phan main cua chuong trinh, no co nhiem vu xu li input cua nguoi dung va cap nhat lai hinh anh
@@ -287,8 +289,25 @@ def main(player_one, player_two, level, isTwoMode):
                     level = FormSignIn.showLevel()
                     level = ''.join(str(i) for i in level)
                     level = int(level)
-                    print(level)
-
+                testMoveLog = str(Board.drawMoveLog(screen, gs))
+                testMoveLog = testMoveLog.replace("'", "")
+                testMoveLog = testMoveLog.replace("[", "")
+                testMoveLog = testMoveLog.replace("]", "")
+                testMoveLog = testMoveLog.replace(",", "")
+                if isWin == 1:
+                    resultLog = "0-1"
+                elif isWin == 2:
+                    resultLog = "1-0"
+                now = datetime.now()
+                time_string = now.strftime("%Y-%m-%d %H:%M:%S")
+                pgn_string = "\n[Event \"Chess Game\"]\n" + \
+                            "[Date \"" + time_string + \
+                            "\"\n" + "Result \"" + resultLog + \
+                            "\"\n" + testMoveLog + \
+                            "\n" + resultLog
+                # print(pgn_string)
+                with open('game.pgn', 'a') as f:
+                    f.write(pgn_string)
                 gs = ChessEngine.GameState()
                 validMoves = gs.getValidMove()
                 moveMake = False

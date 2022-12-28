@@ -230,7 +230,7 @@ def drawMoveLog(screen, gs):
     for i in range(0, len(moveLog), 2):
         moveString = str(i//2+1) + ". " + str(moveLog[i]) + " "
         if i+1 < len(moveLog):
-            moveString += str(moveLog[i+1]) + "   "
+            moveString += str(moveLog[i+1]) + " "
         moveTexts.append(moveString)
 
     movesPerRow = 3
@@ -247,7 +247,7 @@ def drawMoveLog(screen, gs):
         textLocation = moveLogRect.move(padding, textY)
         screen.blit(textObject, textLocation)
         textY += textObject.get_height() + lineSpacing
-
+    return moveTexts
 
 # Vi tri dat ham nay co van  de nen k bat su kien code dc, neu muon bat thi rat phuc tap
 def drawMoveButton(screen):

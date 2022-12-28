@@ -103,7 +103,8 @@ def findBestMove(gs, validMoves, returnQueue, level):
     global botBestMove, counter, DEPTH
     counter = 0
     botBestMove = None
-    DEPTH = level
+    # DEPTH = level
+    DEPTH = 0
     # Lam xao tron danh sach validMove
     random.shuffle(validMoves)
     # findMoveMinMaxAlphaBeta(gs, validMoves, DEPTH, -CHECKMATE, CHECKMATE, gs.whiteToMove)

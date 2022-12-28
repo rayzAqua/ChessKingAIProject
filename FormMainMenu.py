@@ -84,7 +84,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     time.sleep(0.3)
                     # onePlayer()
-                    # pg.quit()
+                    pg.quit()
                     FormSignIn.formSignin()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     time.sleep(0.3)
